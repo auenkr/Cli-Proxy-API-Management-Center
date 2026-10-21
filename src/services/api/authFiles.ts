@@ -45,7 +45,6 @@ export type AuthFileFieldsPatch = {
   websockets?: boolean;
   using_api?: boolean;
   use_siwc?: boolean;
-  official_client_only?: boolean;
   note?: string;
   excluded_models?: string[];
   'excluded-models'?: string[];
@@ -508,6 +507,22 @@ async function updateOauthProviderMap(path: string, provider: string, value?: un
     await apiClient.put(path, next);
   });
 }
+
+const OAUTH_OFFICIAL_CLIENT_ONLY_ENDPOINT = '/config/oauth/official-client-only';
+
+// The restriction lives in config.yaml (oauth.official-client-only), keyed by provider.
+export async function getOfficialClientOnly(provider: string): Promise<boolean> {
+  const key = normalizeOAuthProviderKey(provider);
+  if (!key) return false;
+  const current = await getConfigValue<unknown>(OAUTH_OFFICIAL_CLIENT_ONLY_ENDPOINT, {});
+  if (!isRecord(current)) return false;
+  return Object.entries(current).some(
+    ([name, value]) => normalizeOAuthProviderKey(name) === key && value === true
+  );
+}
+
+export const setOfficialClientOnly = (provider: string, enabled: boolean) =>
+  updateOauthProviderMap(OAUTH_OFFICIAL_CLIENT_ONLY_ENDPOINT, provider, enabled);
 
 export interface AuthFileRefreshResult {
   id: string;

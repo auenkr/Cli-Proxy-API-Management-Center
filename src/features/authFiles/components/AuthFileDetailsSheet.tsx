@@ -14,12 +14,12 @@ import type {
 } from '@/features/authFiles/hooks/useAuthFilesPrefixProxyEditor';
 import {
   supportsAuthFileSiwc,
-  supportsAuthFileOfficialClientOnly,
   supportsAuthFileUsingApi,
   supportsAuthFileWebsockets,
 } from '@/features/authFiles/constants';
 import { MAX_CREDENTIAL_WEIGHT } from '@/utils/credentialWeight';
 import { AuthFileExcludedModelsField } from './AuthFileExcludedModelsField';
+import { AuthFileOfficialClientOnlyField } from './AuthFileOfficialClientOnlyField';
 import { AuthFilePolicyFields } from './AuthFilePolicyFields';
 import { credentialPolicyError, readCredentialPolicy } from '../credentialPolicy';
 import styles from './AuthFileDetailsSheet.module.scss';
@@ -286,24 +286,10 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
                       <div className="hint">{t('auth_files.using_api_hint')}</div>
                     </div>
                   )}
-                  {supportsAuthFileOfficialClientOnly(editor.providerKey) && (
-                    <div className="form-group">
-                      <label>{t('auth_files.official_client_only_label')}</label>
-                      <ToggleSwitch
-                        checked={editor.officialClientOnly}
-                        onChange={(value) => onChange('officialClientOnly', value)}
-                        disabled={disableControls || editor.saving || !editor.json}
-                        ariaLabel={t('auth_files.official_client_only_label')}
-                      />
-                      <div className="hint">
-                        {t(
-                          editor.providerKey === 'codex'
-                            ? 'auth_files.official_client_only_hint_codex'
-                            : 'auth_files.official_client_only_hint_claude'
-                        )}
-                      </div>
-                    </div>
-                  )}
+                  <AuthFileOfficialClientOnlyField
+                    providerKey={editor.providerKey}
+                    disabled={disableControls || editor.saving}
+                  />
                   <AuthFileExcludedModelsField
                     fileName={editor.fileName}
                     value={editor.excludedModelsText}
