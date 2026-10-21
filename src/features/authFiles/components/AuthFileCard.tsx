@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { SelectionCheckbox } from '@/components/ui/SelectionCheckbox';
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
+import { AuthFileOfficialClientOnlyToggle } from './AuthFileOfficialClientOnlyToggle';
 import {
   IconDownload,
   IconInfo,
@@ -334,6 +335,12 @@ export function AuthFileCard(props: AuthFileCardProps) {
         </div>
         {!isRuntimeOnly && (
           <div className={styles.toggleWrap}>
+            <AuthFileOfficialClientOnlyToggle
+              providerKey={providerKey}
+              disabled={disableControls || isManualRefreshing}
+              labelClassName={styles.toggleLabel}
+              groupClassName={styles.toggleGroup}
+            />
             <span className={styles.toggleLabel}>{t('auth_files.status_toggle_label')}</span>
             <ToggleSwitch
               ariaLabel={t('auth_files.card_toggle', { name: file.name })}

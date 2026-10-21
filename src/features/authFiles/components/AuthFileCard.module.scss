@@ -484,6 +484,13 @@
   flex-shrink: 0;
 }
 
+.toggleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 12px;
+}
+
 .toggleLabel {
   font-size: 11px;
   color: var(--text-tertiary);
@@ -493,7 +500,8 @@
 @include mobile {
   .toggleWrap {
     width: 100%;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   .actionsMain {

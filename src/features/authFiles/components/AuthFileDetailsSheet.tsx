@@ -19,7 +19,6 @@ import {
 } from '@/features/authFiles/constants';
 import { MAX_CREDENTIAL_WEIGHT } from '@/utils/credentialWeight';
 import { AuthFileExcludedModelsField } from './AuthFileExcludedModelsField';
-import { AuthFileOfficialClientOnlyField } from './AuthFileOfficialClientOnlyField';
 import { AuthFilePolicyFields } from './AuthFilePolicyFields';
 import { credentialPolicyError, readCredentialPolicy } from '../credentialPolicy';
 import styles from './AuthFileDetailsSheet.module.scss';
@@ -286,10 +285,6 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
                       <div className="hint">{t('auth_files.using_api_hint')}</div>
                     </div>
                   )}
-                  <AuthFileOfficialClientOnlyField
-                    providerKey={editor.providerKey}
-                    disabled={disableControls || editor.saving}
-                  />
                   <AuthFileExcludedModelsField
                     fileName={editor.fileName}
                     value={editor.excludedModelsText}
