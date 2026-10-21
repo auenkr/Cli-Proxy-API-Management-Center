@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { SelectionCheckbox } from '@/components/ui/SelectionCheckbox';
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
-import { AuthFileOfficialClientOnlyToggle } from './AuthFileOfficialClientOnlyToggle';
 import {
   IconDownload,
   IconInfo,
@@ -26,7 +25,9 @@ import {
   getTypeLabel,
   isRuntimeOnlyAuthFile,
   normalizeProviderKey,
+  readAuthFileOfficialClientOnly,
   supportsAuthFileManualRefresh,
+  supportsAuthFileOfficialClientOnly,
   type AuthFileQuotaFilter,
   type ResolvedTheme,
 } from '@/features/authFiles/constants';
@@ -60,6 +61,7 @@ export type AuthFileCardProps = {
   onOpenPrefixProxyEditor: (file: AuthFileItem) => void;
   onDelete: (name: string) => void;
   onToggleStatus: (file: AuthFileItem, enabled: boolean) => void;
+  onToggleOfficialClientOnly: (file: AuthFileItem, enabled: boolean) => void;
   onToggleSelect: (name: string) => void;
 };
 
@@ -85,6 +87,7 @@ export function AuthFileCard(props: AuthFileCardProps) {
     onOpenPrefixProxyEditor,
     onDelete,
     onToggleStatus,
+    onToggleOfficialClientOnly,
     onToggleSelect,
   } = props;
 
@@ -335,12 +338,32 @@ export function AuthFileCard(props: AuthFileCardProps) {
         </div>
         {!isRuntimeOnly && (
           <div className={styles.toggleWrap}>
-            <AuthFileOfficialClientOnlyToggle
-              providerKey={providerKey}
-              disabled={disableControls || isManualRefreshing}
-              labelClassName={styles.toggleLabel}
-              groupClassName={styles.toggleGroup}
-            />
+            {supportsAuthFileOfficialClientOnly(providerKey) && (
+              <div
+                className={styles.toggleGroup}
+                title={t(
+                  providerKey === 'codex'
+                    ? 'auth_files.official_client_only_hint_codex'
+                    : 'auth_files.official_client_only_hint_claude'
+                )}
+              >
+                <span className={styles.toggleLabel}>
+                  {t('auth_files.official_client_only_short')}
+                </span>
+                <ToggleSwitch
+                  ariaLabel={t('auth_files.official_client_only_label')}
+                  checked={readAuthFileOfficialClientOnly(
+                    file as unknown as Record<string, unknown>
+                  )}
+                  disabled={
+                    disableControls ||
+                    statusUpdating[getAuthFileRefreshKey(file)] === true ||
+                    isManualRefreshing
+                  }
+                  onChange={(value) => onToggleOfficialClientOnly(file, value)}
+                />
+              </div>
+            )}
             <span className={styles.toggleLabel}>{t('auth_files.status_toggle_label')}</span>
             <ToggleSwitch
               ariaLabel={t('auth_files.card_toggle', { name: file.name })}

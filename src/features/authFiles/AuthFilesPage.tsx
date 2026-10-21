@@ -55,6 +55,9 @@ import {
   type AuthFilesSortMode,
 } from '@/features/authFiles/uiState';
 import { useAuthStore, useNotificationStore, useThemeStore } from '@/stores';
+import { authFilesApi } from '@/services/api';
+import type { AuthFileItem } from '@/types';
+import { notifyAuthFilesChanged } from '@/features/authFiles/authFilesEvents';
 import styles from './AuthFilesPage.module.scss';
 
 const DEFAULT_REGULAR_PAGE_SIZE = 9;
@@ -153,6 +156,21 @@ export function AuthFilesPage() {
     batchSetStatus,
     batchDelete,
   } = useAuthFilesData({ onFilesMutated: invalidateDerivedCaches });
+
+  const handleOfficialClientOnlyToggle = useCallback(
+    async (file: AuthFileItem, enabled: boolean) => {
+      try {
+        await authFilesApi.patchFields(file.name, { official_client_only: enabled });
+        invalidateDerivedCaches([file.name]);
+        notifyAuthFilesChanged();
+        await loadFiles({ background: true });
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : '';
+        showNotification(`${t('notification.update_failed')}: ${message}`, 'error');
+      }
+    },
+    [invalidateDerivedCaches, loadFiles, showNotification, t]
+  );
 
   const statusBarCache = useAuthFilesStatusBarCache(files);
 
@@ -723,6 +741,7 @@ export function AuthFilesPage() {
                 onOpenPrefixProxyEditor={openPrefixProxyEditor}
                 onDelete={handleDelete}
                 onToggleStatus={handleStatusToggle}
+                onToggleOfficialClientOnly={handleOfficialClientOnlyToggle}
                 onToggleSelect={toggleSelect}
               />
             ))}

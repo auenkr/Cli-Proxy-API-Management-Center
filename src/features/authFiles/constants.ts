@@ -257,6 +257,29 @@ export const applyAuthFileUsingApi = (
 export const supportsAuthFileOfficialClientOnly = (providerKey: string): boolean =>
   AUTH_FILE_OFFICIAL_CLIENT_ONLY_PROVIDERS.has(normalizeProviderKey(providerKey));
 
+// Mirrors the backend: only an explicit false value (a boolean or a strconv.ParseBool false
+// string) or a missing/null value leaves the credential unrestricted. Anything else the
+// backend cannot parse is treated as restricted, so the toggle must show it as on.
+const OFFICIAL_CLIENT_ONLY_TRUE_TEXT = new Set(['1', 't', 'T', 'TRUE', 'true', 'True']);
+const OFFICIAL_CLIENT_ONLY_FALSE_TEXT = new Set(['0', 'f', 'F', 'FALSE', 'false', 'False']);
+
+export const readAuthFileOfficialClientOnly = (value: Record<string, unknown>): boolean => {
+  const raw = value.official_client_only;
+  if (raw === undefined || raw === null) return false;
+  if (typeof raw === 'boolean') return raw;
+  if (typeof raw === 'string') {
+    const text = raw.trim();
+    if (OFFICIAL_CLIENT_ONLY_TRUE_TEXT.has(text)) return true;
+    if (OFFICIAL_CLIENT_ONLY_FALSE_TEXT.has(text)) return false;
+  }
+  return true;
+};
+
+export const applyAuthFileOfficialClientOnly = (
+  value: Record<string, unknown>,
+  officialClientOnly: boolean
+): Record<string, unknown> => ({ ...value, official_client_only: officialClientOnly });
+
 export function isRuntimeOnlyAuthFile(file: AuthFileItem): boolean {
   const raw = file['runtime_only'] ?? file.runtimeOnly;
   if (typeof raw === 'boolean') return raw;
