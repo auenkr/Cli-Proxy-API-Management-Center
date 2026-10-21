@@ -45,6 +45,7 @@ export type AuthFileFieldsPatch = {
   websockets?: boolean;
   using_api?: boolean;
   use_siwc?: boolean;
+  official_client_only?: boolean;
   note?: string;
   excluded_models?: string[];
   'excluded-models'?: string[];

@@ -45,6 +45,8 @@ export interface AuthFileItem {
   useSiwc?: boolean;
   siwcBound?: boolean;
   siwcExpiresAt?: string;
+  /** Stable credential identifier issued by the backend (`id` in the auth-files payload). */
+  id?: string;
   type?: AuthFileType | string;
   provider?: string;
   /**

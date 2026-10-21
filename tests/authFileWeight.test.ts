@@ -33,6 +33,8 @@ const makeEditor = (json: Record<string, unknown>, weight: string): PrefixProxyE
   useSiwcTouched: false,
   usingApi: false,
   usingApiTouched: false,
+  officialClientOnly: false,
+  officialClientOnlyTouched: false,
   note: '',
   noteTouched: false,
   excludedModelsText: '',
