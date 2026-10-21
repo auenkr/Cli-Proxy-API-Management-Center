@@ -1,4 +1,12 @@
 {
+  "quota_tokens": {
+    "title": "Chi phí token",
+    "input": "Đầu vào",
+    "cache_read": "Đọc cache",
+    "cache_write": "Ghi cache",
+    "output": "Đầu ra",
+    "thinking": "Suy luận"
+  },
   "common": {
     "login": "Đăng nhập",
     "logout": "Đăng xuất",

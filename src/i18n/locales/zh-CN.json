@@ -1,4 +1,12 @@
 {
+  "quota_tokens": {
+    "title": "令牌成本",
+    "input": "输入",
+    "cache_read": "缓存读取",
+    "cache_write": "缓存写入",
+    "output": "输出",
+    "thinking": "思考"
+  },
   "common": {
     "login": "登录",
     "logout": "登出",

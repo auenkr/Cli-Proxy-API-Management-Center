@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   captureQuotaCacheGeneration,
@@ -15,6 +15,9 @@ import { IconRefreshCw } from '@/components/ui/icons';
 import { bindQuotaClasses } from '@/features/quota/types';
 import { QUOTA_ADAPTERS, type QuotaCardState } from '@/features/quota/providers';
 import { hasClaudeUsageData } from '@/features/quota/providers/claude/data';
+import { useTokenUsage } from '@/features/quota/hooks/useTokenUsage';
+import { hasTokenCostData } from '@/features/quota/tokenUsage';
+import { TokenCostDistribution } from '@/features/quota/components/TokenCostDistribution';
 import styles from './AuthFileQuota.module.scss';
 
 /** Bind the auth-file host's compact styles to the quota rendering contract. */
@@ -42,6 +45,8 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
   const [resettingQuota, setResettingQuota] = useState(false);
   const adapter = QUOTA_ADAPTERS[quotaType];
   const cacheKey = getQuotaCacheKey(file);
+  const tokenUsage = useTokenUsage();
+  const tokenBreakdown = tokenUsage.lookup(file);
 
   const quota = useQuotaStore((state) => {
     if (quotaType === 'antigravity')
@@ -109,6 +114,17 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
     t,
     updateQuotaState,
   ]);
+
+  // Auto-load quota when this credential has no cached data yet, so the card
+  // no longer sits on the idle "click to refresh" prompt. Runs once per mount.
+  const quotaAutoLoadRef = useRef(false);
+  useEffect(() => {
+    if (quotaAutoLoadRef.current) return;
+    if (quota?.status !== undefined && quota.status !== 'idle') return;
+    if (disableControls || isRuntimeOnlyAuthFile(file) || file.disabled) return;
+    quotaAutoLoadRef.current = true;
+    void refreshQuotaForFile();
+  }, [disableControls, file, quota?.status, refreshQuotaForFile]);
 
   const resetQuotaForFile = useCallback(() => {
     if (disableControls) return;
@@ -234,6 +250,9 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
             </Button>
           )}
         </div>
+      )}
+      {hasTokenCostData(tokenBreakdown) && tokenBreakdown && (
+        <TokenCostDistribution breakdown={tokenBreakdown} compact />
       )}
     </div>
   );

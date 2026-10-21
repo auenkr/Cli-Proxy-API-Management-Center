@@ -21,6 +21,9 @@ import { isQuotaRefreshDisabled, type QuotaFileEntry } from '../logic';
 import { useClaudeResetGrants } from '../providers/claude/ClaudeResetGrants';
 import { ClaudeResetGrantDetails } from '../providers/claude/ClaudeResetGrantDetails';
 import { hasClaudeUsageData } from '../providers/claude/data';
+import { useTokenUsage } from '../hooks/useTokenUsage';
+import { hasTokenCostData } from '../tokenUsage';
+import { TokenCostDistribution } from './TokenCostDistribution';
 import bodyStyles from './QuotaBody.module.scss';
 import styles from './QuotaCard.module.scss';
 
@@ -53,6 +56,8 @@ export function QuotaCard(props: QuotaCardProps) {
   const { t } = useTranslation();
   const adapter = QUOTA_ADAPTERS[entry.type];
   const file = entry.file;
+  const tokenUsage = useTokenUsage();
+  const tokenBreakdown = tokenUsage.lookup(file);
   const retainedClaudeUsage =
     entry.type === 'claude' && hasClaudeUsageData(quota as ClaudeQuotaState | undefined);
   const displayName = getQuotaDisplayName(file);
@@ -170,6 +175,9 @@ export function QuotaCard(props: QuotaCardProps) {
           </div>
         )}
         {retainedClaudeUsage && quota && <adapter.Body quota={quota} classes={quotaClasses} />}
+        {hasTokenCostData(tokenBreakdown) && tokenBreakdown && (
+          <TokenCostDistribution breakdown={tokenBreakdown} />
+        )}
       </div>
 
       {status !== 'idle' && (

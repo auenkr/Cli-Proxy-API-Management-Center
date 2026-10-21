@@ -1,4 +1,12 @@
 {
+  "quota_tokens": {
+    "title": "Стоимость токенов",
+    "input": "Вход",
+    "cache_read": "Чтение кэша",
+    "cache_write": "Запись кэша",
+    "output": "Выход",
+    "thinking": "Размышление"
+  },
   "common": {
     "login": "Войти",
     "logout": "Выйти",

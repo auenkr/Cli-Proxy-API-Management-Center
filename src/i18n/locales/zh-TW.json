@@ -1,4 +1,12 @@
 {
+  "quota_tokens": {
+    "title": "權杖成本",
+    "input": "輸入",
+    "cache_read": "快取讀取",
+    "cache_write": "快取寫入",
+    "output": "輸出",
+    "thinking": "思考"
+  },
   "common": {
     "login": "登入",
     "logout": "登出",

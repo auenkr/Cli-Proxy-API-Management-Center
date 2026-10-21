@@ -42,6 +42,8 @@ export interface AuthFileCooldownSnapshot {
 
 export interface AuthFileItem {
   name: string;
+  /** Stable credential identifier issued by the backend (`id` in the auth-files payload). */
+  id?: string;
   type?: AuthFileType | string;
   provider?: string;
   /**

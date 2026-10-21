@@ -1,4 +1,12 @@
 {
+  "quota_tokens": {
+    "title": "토큰 비용",
+    "input": "입력",
+    "cache_read": "캐시 읽기",
+    "cache_write": "캐시 쓰기",
+    "output": "출력",
+    "thinking": "사고"
+  },
   "common": {
     "login": "로그인",
     "logout": "로그아웃",

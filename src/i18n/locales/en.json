@@ -1,4 +1,12 @@
 {
+  "quota_tokens": {
+    "title": "Token cost",
+    "input": "Input",
+    "cache_read": "Cache read",
+    "cache_write": "Cache write",
+    "output": "Output",
+    "thinking": "Thinking"
+  },
   "common": {
     "login": "Login",
     "logout": "Logout",
