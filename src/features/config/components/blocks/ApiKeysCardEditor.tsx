@@ -334,15 +334,38 @@ function ScopedApiKeysCardEditor({
             {t('config_management.visual.api_keys.restrict_models')}
           </label>
           {restrictModels && (
-            <div className="form-group">
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <div className="hint">
                 {modelsLoading
                   ? t('system_info.models_loading')
                   : t('config_management.visual.api_keys.models_hint')}
               </div>
-              <div style={{ maxHeight: 240, overflow: 'auto' }}>
+              <div
+                style={{
+                  maxHeight: 260,
+                  overflow: 'auto',
+                  border: '1px solid var(--border-color, rgba(255,255,255,0.12))',
+                  borderRadius: 8,
+                  padding: '8px 10px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 6,
+                  background: 'var(--surface-secondary, transparent)',
+                }}
+              >
                 {models.map((model) => (
-                  <label key={model.name} style={{ display: 'block' }}>
+                  <label
+                    key={model.name}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      cursor: disabled ? 'not-allowed' : 'pointer',
+                      fontSize: 13,
+                      color: 'var(--text-primary)',
+                      padding: '2px 0',
+                    }}
+                  >
                     <input
                       type="checkbox"
                       checked={selectedModels.has(model.name)}
@@ -353,10 +376,14 @@ function ScopedApiKeysCardEditor({
                         else next.delete(model.name);
                         setSelectedModels(next);
                       }}
+                      style={{ margin: 0 }}
                     />
-                    {model.name}
+                    <span>{model.name}</span>
                   </label>
                 ))}
+                {models.length === 0 && !modelsLoading && (
+                  <div className="hint">{t('system_info.models_empty')}</div>
+                )}
               </div>
             </div>
           )}
