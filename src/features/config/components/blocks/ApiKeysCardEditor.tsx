@@ -14,6 +14,8 @@ import styles from './Blocks.module.scss';
 
 interface ApiKeysCardEditorProps {
   value: string;
+  modelRestrictions: Record<string, string[]>;
+  onModelRestrictionsChange: (value: Record<string, string[]>) => void;
   disabled?: boolean;
   onChange: (nextValue: string) => void;
 }
@@ -25,12 +27,16 @@ export const ApiKeysCardEditor = memo(function ApiKeysCardEditor(props: ApiKeysC
 
 function ScopedApiKeysCardEditor({
   value,
+  modelRestrictions,
+  onModelRestrictionsChange,
   disabled,
   onChange,
   apiBase,
 }: ApiKeysCardEditorProps & { apiBase: string }) {
   const [names, setNames] = useState(() => readApiKeyNames(apiBase));
   const [nameValue, setNameValue] = useState('');
+  const [restrictModels, setRestrictModels] = useState(false);
+  const [modelsText, setModelsText] = useState('');
   const { t } = useTranslation();
   const showNotification = useNotificationStore((state) => state.showNotification);
   const apiKeys = useMemo(
@@ -66,6 +72,8 @@ function ScopedApiKeysCardEditor({
   const [formError, setFormError] = useState('');
 
   const openAddModal = () => {
+    setRestrictModels(false);
+    setModelsText('');
     setNameValue('');
     setEditingApiKeyId(null);
     setInputValue('');
@@ -80,6 +88,9 @@ function ScopedApiKeysCardEditor({
     setNameValue(latestNames[nameFingerprints[editingIndex]] ?? '');
     setEditingApiKeyId(apiKeyId);
     setInputValue(apiKeys[editingIndex] ?? '');
+    const key = apiKeys[editingIndex];
+    setRestrictModels(Object.prototype.hasOwnProperty.call(modelRestrictions, key));
+    setModelsText((modelRestrictions[key] ?? []).join('\n'));
     setFormError('');
     setModalOpen(true);
   };
@@ -99,6 +110,9 @@ function ScopedApiKeysCardEditor({
     const index = renderApiKeyIds.findIndex((id) => id === apiKeyId);
     if (index < 0) return;
     setApiKeyIds(renderApiKeyIds.filter((id) => id !== apiKeyId));
+    const nextRestrictions = { ...modelRestrictions };
+    delete nextRestrictions[apiKeys[index]];
+    onModelRestrictionsChange(nextRestrictions);
     updateApiKeys(apiKeys.filter((_, i) => i !== index));
   };
 
@@ -125,6 +139,23 @@ function ScopedApiKeysCardEditor({
       return;
     }
     setNames(readApiKeyNames(apiBase));
+    const nextRestrictions = { ...modelRestrictions };
+    if (editingIndex >= 0 && apiKeys[editingIndex] !== trimmed) {
+      delete nextRestrictions[apiKeys[editingIndex]];
+    }
+    if (restrictModels) {
+      nextRestrictions[trimmed] = [
+        ...new Set(
+          modelsText
+            .split('\n')
+            .map((model) => model.trim())
+            .filter(Boolean)
+        ),
+      ];
+    } else {
+      delete nextRestrictions[trimmed];
+    }
+    onModelRestrictionsChange(nextRestrictions);
     // Retain old fingerprints: configuration edits can still be discarded or fail to save.
     if (editingApiKeyId === null) {
       setApiKeyIds([...renderApiKeyIds, makeClientId()]);
@@ -276,6 +307,29 @@ function ScopedApiKeysCardEditor({
               {formError}
             </div>
           )}
+        </div>
+        <div className="form-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={restrictModels}
+              disabled={disabled}
+              onChange={(event) => setRestrictModels(event.target.checked)}
+            />
+            {t('config_management.visual.api_keys.restrict_models')}
+          </label>
+          {restrictModels && (
+            <label>
+              {t('config_management.visual.api_keys.allowed_models')}
+              <textarea
+                className="input"
+                value={modelsText}
+                disabled={disabled}
+                onChange={(event) => setModelsText(event.target.value)}
+              />
+            </label>
+          )}
+          <div className="hint">{t('config_management.visual.api_keys.models_hint')}</div>
         </div>
       </Modal>
     </div>

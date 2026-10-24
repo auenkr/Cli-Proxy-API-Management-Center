@@ -561,7 +561,6 @@
     "reset_confirm_button": "确认重置",
     "reset_not_confirmed": "未确认额度重置成功，请刷新额度后再决定是否重试。",
     "reset_cooldown_failed": "额度已重置，但代理冷却清除失败。请在原连接的认证文件页面使用“清除冷却”，不要再次消耗重置卡。",
-
     "reset_success": "已重置 \"{{name}}\" 的 Codex 额度",
     "reset_failed": "重置 \"{{name}}\" 的 Codex 额度失败：{{message}}",
     "plan_plus": "Plus",
@@ -1509,7 +1508,10 @@
           "fair": "一般",
           "good": "良好",
           "strong": "很强"
-        }
+        },
+        "restrict_models": "Restrict model access",
+        "allowed_models": "Allowed model IDs (one per line)",
+        "models_hint": "Disabled: all models allowed. Enabled: only exact public model IDs listed here are allowed. An empty list blocks all models."
       },
       "payload_rules": {
         "rule": "规则",

@@ -1257,6 +1257,10 @@ function getNextDirtyFields(
     ] as Array<keyof VisualConfigValues>
   ).forEach(updateScalarDirty);
 
+  if (Object.prototype.hasOwnProperty.call(patch, 'apiKeyModels')) {
+    updateDirty('apiKeyModels', JSON.stringify(nextValues.apiKeyModels) === JSON.stringify(baselineValues.apiKeyModels));
+  }
+
   if (Object.prototype.hasOwnProperty.call(patch, 'pluginStoreSources')) {
     updateDirty(
       'pluginStoreSources',
@@ -1455,6 +1459,16 @@ function parseVisualValuesFromYaml(yamlContent: string): VisualConfigValues {
 
     authDir: typeof v8Oauth?.['auth-dir'] === 'string' ? v8Oauth?.['auth-dir'] : '',
     apiKeysText: parseApiKeysText(asRecord(parsed.access)?.['api-keys']),
+    apiKeyModels: Object.fromEntries(
+      Object.entries(asRecord(asRecord(parsed.access)?.['api-key-models']) ?? {}).map(
+        ([key, models]) => [
+          key,
+          Array.isArray(models)
+            ? models.filter((model): model is string => typeof model === 'string')
+            : [],
+        ]
+      )
+    ),
     pluginsEnabled: Boolean(plugins?.enabled),
     pluginStoreSources: parseStringList(plugins?.['store-sources']),
     pluginStoreAuth: parsePluginStoreAuthRules(plugins?.['store-auth']),
@@ -1736,6 +1750,10 @@ export function useVisualConfig() {
           } else if (docHas(doc, ['access', 'api-keys'])) {
             doc.deleteIn(['access', 'api-keys']);
           }
+        }
+
+        if (dirtyFields.has('apiKeyModels')) {
+          doc.setIn(['access', 'api-key-models'], values.apiKeyModels);
         }
 
         const pluginsDirty =

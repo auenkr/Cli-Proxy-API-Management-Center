@@ -101,6 +101,8 @@ export function ApiKeysField({ values, disabled, onChange }: SharedFieldProps) {
       <SettingCell fieldId="apiKeys">
         <ApiKeysCardEditor
           value={values.apiKeysText}
+          modelRestrictions={values.apiKeyModels}
+          onModelRestrictionsChange={(apiKeyModels) => onChange({ apiKeyModels })}
           disabled={disabled}
           onChange={(apiKeysText) => onChange({ apiKeysText })}
         />

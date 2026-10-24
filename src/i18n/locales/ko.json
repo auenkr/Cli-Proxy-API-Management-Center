@@ -1510,7 +1510,10 @@
           "fair": "보통",
           "good": "좋음",
           "strong": "강함"
-        }
+        },
+        "restrict_models": "Restrict model access",
+        "allowed_models": "Allowed model IDs (one per line)",
+        "models_hint": "Disabled: all models allowed. Enabled: only exact public model IDs listed here are allowed. An empty list blocks all models."
       },
       "payload_rules": {
         "rule": "규칙",
