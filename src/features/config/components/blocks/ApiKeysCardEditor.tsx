@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { useAuthStore, useNotificationStore } from '@/stores';
+import { useModelsStore } from '@/stores/useModelsStore';
 import { apiKeyNameFingerprint, readApiKeyNames, saveApiKeyName } from '../../apiKeyNames';
 import { copyToClipboard } from '@/utils/clipboard';
 import { makeClientId } from '@/types/visualConfig';
@@ -36,9 +37,12 @@ function ScopedApiKeysCardEditor({
   const [names, setNames] = useState(() => readApiKeyNames(apiBase));
   const [nameValue, setNameValue] = useState('');
   const [restrictModels, setRestrictModels] = useState(false);
-  const [modelsText, setModelsText] = useState('');
+  const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set());
   const { t } = useTranslation();
   const showNotification = useNotificationStore((state) => state.showNotification);
+  const models = useModelsStore((state) => state.models);
+  const modelsLoading = useModelsStore((state) => state.loading);
+  const fetchModels = useModelsStore((state) => state.fetchModels);
   const apiKeys = useMemo(
     () =>
       value
@@ -73,12 +77,13 @@ function ScopedApiKeysCardEditor({
 
   const openAddModal = () => {
     setRestrictModels(false);
-    setModelsText('');
+    setSelectedModels(new Set());
     setNameValue('');
     setEditingApiKeyId(null);
     setInputValue('');
     setFormError('');
     setModalOpen(true);
+    void fetchModels(apiBase, apiKeys[0] || undefined, false).catch(() => undefined);
   };
 
   const openEditModal = (apiKeyId: string) => {
@@ -89,10 +94,13 @@ function ScopedApiKeysCardEditor({
     setEditingApiKeyId(apiKeyId);
     setInputValue(apiKeys[editingIndex] ?? '');
     const key = apiKeys[editingIndex];
-    setRestrictModels(Object.prototype.hasOwnProperty.call(modelRestrictions, key));
-    setModelsText((modelRestrictions[key] ?? []).join('\n'));
+    const restricted = Object.prototype.hasOwnProperty.call(modelRestrictions, key);
+    setRestrictModels(restricted);
+    setSelectedModels(new Set(restricted ? modelRestrictions[key] : []));
     setFormError('');
     setModalOpen(true);
+    const fetchForKey = (apiKeys[editingIndex] ?? '').trim() || apiKeys.find((k) => k.trim()) || '';
+    void fetchModels(apiBase, fetchForKey || undefined, false).catch(() => undefined);
   };
 
   const closeModal = () => {
@@ -144,14 +152,15 @@ function ScopedApiKeysCardEditor({
       delete nextRestrictions[apiKeys[editingIndex]];
     }
     if (restrictModels) {
-      nextRestrictions[trimmed] = [
-        ...new Set(
-          modelsText
-            .split('\n')
-            .map((model) => model.trim())
-            .filter(Boolean)
-        ),
-      ];
+      const selected = Array.from(selectedModels);
+      // All selected (or none loaded) means unrestricted.
+      if (selected.length > 0 && selected.length < models.length) {
+        nextRestrictions[trimmed] = selected;
+      } else if (selected.length === 0 && models.length > 0) {
+        nextRestrictions[trimmed] = [];
+      } else {
+        delete nextRestrictions[trimmed];
+      }
     } else {
       delete nextRestrictions[trimmed];
     }
@@ -314,22 +323,43 @@ function ScopedApiKeysCardEditor({
               type="checkbox"
               checked={restrictModels}
               disabled={disabled}
-              onChange={(event) => setRestrictModels(event.target.checked)}
+              onChange={(event) => {
+                const checked = event.target.checked;
+                setRestrictModels(checked);
+                if (checked && selectedModels.size === 0 && models.length > 0) {
+                  setSelectedModels(new Set(models.map((model) => model.name)));
+                }
+              }}
             />
             {t('config_management.visual.api_keys.restrict_models')}
           </label>
           {restrictModels && (
-            <label>
-              {t('config_management.visual.api_keys.allowed_models')}
-              <textarea
-                className="input"
-                value={modelsText}
-                disabled={disabled}
-                onChange={(event) => setModelsText(event.target.value)}
-              />
-            </label>
+            <div className="form-group">
+              <div className="hint">
+                {modelsLoading
+                  ? t('system_info.models_loading')
+                  : t('config_management.visual.api_keys.models_hint')}
+              </div>
+              <div style={{ maxHeight: 240, overflow: 'auto' }}>
+                {models.map((model) => (
+                  <label key={model.name} style={{ display: 'block' }}>
+                    <input
+                      type="checkbox"
+                      checked={selectedModels.has(model.name)}
+                      disabled={disabled}
+                      onChange={(event) => {
+                        const next = new Set(selectedModels);
+                        if (event.target.checked) next.add(model.name);
+                        else next.delete(model.name);
+                        setSelectedModels(next);
+                      }}
+                    />
+                    {model.name}
+                  </label>
+                ))}
+              </div>
+            </div>
           )}
-          <div className="hint">{t('config_management.visual.api_keys.models_hint')}</div>
         </div>
       </Modal>
     </div>
