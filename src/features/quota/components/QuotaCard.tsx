@@ -23,6 +23,7 @@ import { ClaudeResetGrantDetails } from '../providers/claude/ClaudeResetGrantDet
 import { hasClaudeUsageData } from '../providers/claude/data';
 import { useTokenUsage } from '../hooks/useTokenUsage';
 import { hasTokenCostData } from '../tokenUsage';
+import { maskEmails } from '../maskEmail';
 import { TokenCostDistribution } from './TokenCostDistribution';
 import bodyStyles from './QuotaBody.module.scss';
 import styles from './QuotaCard.module.scss';
@@ -40,6 +41,7 @@ export type QuotaCardProps = {
   entranceDelayMs?: number | null;
   onRefresh: () => void;
   onReset: () => void;
+  showEmails?: boolean;
 };
 
 export function QuotaCard(props: QuotaCardProps) {
@@ -52,6 +54,7 @@ export function QuotaCard(props: QuotaCardProps) {
     entranceDelayMs,
     onRefresh,
     onReset,
+    showEmails = true,
   } = props;
   const { t } = useTranslation();
   const adapter = QUOTA_ADAPTERS[entry.type];
@@ -60,7 +63,9 @@ export function QuotaCard(props: QuotaCardProps) {
   const tokenBreakdown = tokenUsage.lookup(file);
   const retainedClaudeUsage =
     entry.type === 'claude' && hasClaudeUsageData(quota as ClaudeQuotaState | undefined);
-  const displayName = getQuotaDisplayName(file);
+  const displayName = showEmails
+    ? getQuotaDisplayName(file)
+    : maskEmails(getQuotaDisplayName(file));
 
   // Capture the entrance delay only at mount, without a render-time ref read.
   const [mountEntranceDelayMs] = useState<number | null>(entranceDelayMs ?? null);

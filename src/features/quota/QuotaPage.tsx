@@ -26,6 +26,10 @@ import { ProviderTabs } from '@/features/authFiles/components/ProviderTabs';
 import { QuotaHeader } from './components/QuotaHeader';
 import { QuotaCard } from './components/QuotaCard';
 import { QuotaTimeline } from './components/QuotaTimeline';
+import { QuotaForecast } from './components/QuotaForecast';
+import { useQuotaHistory } from './hooks/useQuotaHistory';
+import { maskEmails } from './maskEmail';
+import { buildTimelineLane, laneHasWindow } from './quotaTimelineModel';
 import {
   CARD_ENTRANCE_BUDGET_MS,
   QUOTA_PAGE_SIZE,
@@ -56,11 +60,7 @@ import styles from './QuotaPage.module.scss';
 const TAB_IDS: string[] = ['all', ...QUOTA_TAB_ORDER];
 const SKELETON_CARD_COUNT = 6;
 
-/**
- * Existing providers display filenames; Devin's card and timeline share an
- * identity-aware display label. Keep the filename fallback stable for memoization.
- */
-const displayNameFor = (name: string) => name;
+const FORECAST_MAX_PERIOD_HOURS = 7 * 24;
 
 export function QuotaPage() {
   const { t } = useTranslation();
@@ -74,6 +74,7 @@ export function QuotaPage() {
   const [sortMode, setSortMode] = useState<QuotaSortMode>(
     () => readQuotaUiState()?.sortMode ?? 'default'
   );
+  const [showEmails, setShowEmails] = useState(() => readQuotaUiState()?.showEmails ?? false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -178,10 +179,40 @@ export function QuotaPage() {
     () => filterEntriesBySearch(filterEntriesByTab(entries, tab), search),
     [entries, tab, search]
   );
+  const handleToggleEmails = useCallback(() => {
+    setShowEmails((value) => {
+      writeQuotaUiState({ showEmails: !value });
+      return !value;
+    });
+  }, []);
+  const maskedDisplayName = useCallback(
+    (name: string) => (showEmails ? name : maskEmails(name)),
+    [showEmails]
+  );
   const handleSearchChange = useCallback((value: string) => {
     setSearch(value);
     setPage(1);
   }, []);
+
+  // Forecast covers every credential in the tab, not just the visible page.
+  const tabEntries = useMemo(() => filterEntriesByTab(entries, tab), [entries, tab]);
+  const forecastNow = useNow();
+  const forecastLaneList = useMemo(
+    () =>
+      tabEntries
+        .map((entry) =>
+          buildTimelineLane({
+            name: getQuotaCacheKey(entry.file),
+            displayName: entry.file.name,
+            provider: entry.type,
+            quota: getQuota(entry),
+            maxPeriodHours: FORECAST_MAX_PERIOD_HOURS,
+          })
+        )
+        .filter(laneHasWindow),
+    [tabEntries, getQuota]
+  );
+  const quotaSamples = useQuotaHistory(forecastLaneList, !disableControls);
 
   const resolveNextRecovery = useCallback(
     (entry: QuotaFileEntry) => nextRecoveryMs(entry.type, getQuota(entry), sortNow),
@@ -332,6 +363,8 @@ export function QuotaPage() {
         refreshing={loading || batchLoading}
         disableControls={disableControls}
         onRefreshAll={handleRefreshAll}
+        showEmails={showEmails}
+        onToggleEmails={handleToggleEmails}
       />
 
       <section className={styles.workbench}>
@@ -345,6 +378,8 @@ export function QuotaPage() {
             onChange={handleTabChange}
           />
         </div>
+
+        <QuotaForecast lanes={forecastLaneList} samples={quotaSamples} now={forecastNow} />
 
         <div className={styles.toolbar}>
           <div className={styles.search}>
@@ -435,6 +470,7 @@ export function QuotaPage() {
                 canRefresh={canUseActions && !entry.file.disabled}
                 resetting={resettingQuotaName === getQuotaCacheKey(entry.file)}
                 entranceDelayMs={cardEntranceDelay(index)}
+                showEmails={showEmails}
                 onRefresh={() => void refreshQuota(entry.file, QUOTA_ADAPTERS[entry.type])}
                 onReset={() => resetQuota(entry.file, QUOTA_ADAPTERS[entry.type])}
               />
@@ -474,7 +510,7 @@ export function QuotaPage() {
         <QuotaTimeline
           entries={pageItems}
           quotaFor={getQuota}
-          displayNameFor={displayNameFor}
+          displayNameFor={maskedDisplayName}
           resolvedTheme={resolvedTheme}
         />
       </section>
