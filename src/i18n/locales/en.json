@@ -1596,6 +1596,8 @@
     }
   },
   "quota_management": {
+    "show_emails": "Show emails",
+    "hide_emails": "Hide emails",
     "forecast_window": "Quota window",
     "forecast_window_weekly": "Weekly",
     "forecast_window_5h": "5-hour",

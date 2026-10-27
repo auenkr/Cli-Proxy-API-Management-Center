@@ -1596,6 +1596,8 @@
     }
   },
   "quota_management": {
+    "show_emails": "이메일 표시",
+    "hide_emails": "이메일 숨기기",
     "forecast_window": "할당량 기간",
     "forecast_window_weekly": "주간",
     "forecast_window_5h": "5시간",

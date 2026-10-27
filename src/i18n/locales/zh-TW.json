@@ -1622,6 +1622,8 @@
     }
   },
   "quota_management": {
+    "show_emails": "顯示電子郵件",
+    "hide_emails": "隱藏電子郵件",
     "forecast_window": "配額視窗",
     "forecast_window_weekly": "每週",
     "forecast_window_5h": "5 小時",
