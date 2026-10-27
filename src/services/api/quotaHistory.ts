@@ -9,6 +9,7 @@ export interface QuotaHistorySample {
   at: number;
   /** Remaining percent, 0..100. */
   remaining: number;
+  window?: '5h' | 'weekly';
 }
 
 const TIMEOUT_MS = 15 * 1000;
@@ -21,6 +22,4 @@ export const quotaHistoryApi = {
     );
     return Array.isArray(data?.samples) ? data.samples : [];
   },
-  record: (samples: QuotaHistorySample[]) =>
-    apiClient.post('/observability/quota/history', { samples }, { timeout: TIMEOUT_MS }),
 };

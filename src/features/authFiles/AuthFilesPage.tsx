@@ -92,6 +92,7 @@ export function AuthFilesPage() {
   const [filter, setFilter] = useState<'all' | string>('all');
   const [statusFilterMode, setStatusFilterMode] = useState<AuthFilesStatusFilterMode>('all');
   const [compactMode, setCompactMode] = useState(false);
+  const [showEmails, setShowEmails] = useState(false);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [pageSizeByMode, setPageSizeByMode] = useState({
@@ -643,6 +644,8 @@ export function AuthFilesPage() {
         />
 
         <AuthFilesToolbar
+          showEmails={showEmails}
+          onToggleEmails={() => setShowEmails((value) => !value)}
           search={search}
           onSearchChange={(value) => {
             setSearch(value);
@@ -724,6 +727,7 @@ export function AuthFilesPage() {
                 key={getQuotaCacheKey(file)}
                 file={file}
                 compact={compactMode}
+                showEmails={showEmails}
                 selected={selectedFiles.has(file.name)}
                 resolvedTheme={resolvedTheme}
                 disableControls={disableControls}

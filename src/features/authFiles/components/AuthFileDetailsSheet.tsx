@@ -297,7 +297,9 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
                       />
                       <div className="hint">
                         {t(
-                          editor.providerKey === 'codex'
+                          editor.providerKey === 'gemini-cli'
+                            ? 'auth_files.official_client_only_hint_gemini'
+                            : editor.providerKey === 'codex'
                             ? 'auth_files.official_client_only_hint_codex'
                             : 'auth_files.official_client_only_hint_claude'
                         )}

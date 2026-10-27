@@ -32,6 +32,7 @@ import {
   type ResolvedTheme,
 } from '@/features/authFiles/constants';
 import { deriveAuthFileIdentity } from '@/features/authFiles/identity';
+import { maskEmails } from '@/features/quota/maskEmail';
 import { resolveAuthFileQuotaType } from '@/features/authFiles/logic';
 import type { AuthFileStatusBarData } from '@/features/authFiles/hooks/useAuthFilesStatusBarCache';
 import { AuthFileQuotaSection } from '@/features/authFiles/components/AuthFileQuotaSection';
@@ -43,6 +44,7 @@ import styles from './AuthFileCard.module.scss';
 export type AuthFileCardProps = {
   file: AuthFileItem;
   compact: boolean;
+  showEmails?: boolean;
   selected: boolean;
   resolvedTheme: ResolvedTheme;
   disableControls: boolean;
@@ -70,6 +72,7 @@ export function AuthFileCard(props: AuthFileCardProps) {
   const {
     file,
     compact,
+    showEmails = false,
     selected,
     resolvedTheme,
     disableControls,
@@ -119,6 +122,7 @@ export function AuthFileCard(props: AuthFileCardProps) {
   const noteValue = typeof file.note === 'string' ? file.note.trim() : '';
   // Lead with account identity and use the file name as secondary text.
   const identity = deriveAuthFileIdentity(file);
+  const display = (value: string) => (showEmails ? value : maskEmails(value));
   const siwcExpires = file.siwcExpiresAt
     ? formatDateTimeValue(file.siwcExpiresAt, i18n.language)
     : '';
@@ -147,8 +151,8 @@ export function AuthFileCard(props: AuthFileCardProps) {
             checked={selected}
             onChange={() => onToggleSelect(file.name)}
             className={styles.selection}
-            ariaLabel={t('auth_files.card_select', { name: file.name })}
-            title={t('auth_files.card_select', { name: file.name })}
+            ariaLabel={t('auth_files.card_select', { name: display(file.name) })}
+            title={t('auth_files.card_select', { name: display(file.name) })}
           />
         )}
         <h3 className={styles.identity}>
@@ -164,9 +168,9 @@ export function AuthFileCard(props: AuthFileCardProps) {
           </span>
           <span
             className={`${styles.account} ${identity.kind === 'fileName' ? styles.accountMono : ''}`}
-            title={identity.primary}
+            title={display(identity.primary)}
           >
-            {identity.primary}
+            {display(identity.primary)}
           </span>
         </h3>
         {isRuntimeOnly && (
@@ -175,21 +179,21 @@ export function AuthFileCard(props: AuthFileCardProps) {
       </header>
 
       {identity.secondary && (
-        <p className={styles.fileName} title={identity.fullName}>
-          {identity.secondary}
+        <p className={styles.fileName} title={display(identity.fullName)}>
+          {display(identity.secondary)}
         </p>
       )}
 
       {!compact && noteValue && (
-        <p className={styles.note} title={noteValue}>
-          {noteValue}
+        <p className={styles.note} title={display(noteValue)}>
+          {display(noteValue)}
         </p>
       )}
 
       {rawStatusMessage && hasStatusWarning && (
-        <div className={styles.warning} title={rawStatusMessage}>
+        <div className={styles.warning} title={display(rawStatusMessage)}>
           <IconInfo className={styles.warningIcon} size={14} />
-          <span>{rawStatusMessage}</span>
+          <span>{display(rawStatusMessage)}</span>
         </div>
       )}
 
@@ -342,7 +346,9 @@ export function AuthFileCard(props: AuthFileCardProps) {
               <div
                 className={styles.toggleGroup}
                 title={t(
-                  providerKey === 'codex'
+                  providerKey === 'gemini-cli'
+                    ? 'auth_files.official_client_only_hint_gemini'
+                    : providerKey === 'codex'
                     ? 'auth_files.official_client_only_hint_codex'
                     : 'auth_files.official_client_only_hint_claude'
                 )}
@@ -366,7 +372,7 @@ export function AuthFileCard(props: AuthFileCardProps) {
             )}
             <span className={styles.toggleLabel}>{t('auth_files.status_toggle_label')}</span>
             <ToggleSwitch
-              ariaLabel={t('auth_files.card_toggle', { name: file.name })}
+              ariaLabel={t('auth_files.card_toggle', { name: display(file.name) })}
               checked={!file.disabled}
               disabled={
                 disableControls ||

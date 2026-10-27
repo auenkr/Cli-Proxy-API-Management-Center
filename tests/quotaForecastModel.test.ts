@@ -32,6 +32,7 @@ test('drain ignores resets and gaps', () => {
     name: 'a',
     at: base + h * HOUR,
     remaining,
+    window: 'weekly' as const,
   });
   const drain = buildDrainSeries(
     [at(0, 50), at(1, 45), at(2, 100), at(10, 90)],
@@ -41,6 +42,21 @@ test('drain ignores resets and gaps', () => {
   );
   expect(drain.map((p) => p.value)).toEqual([5, 0]);
   expect(averageDrainPerHour(drain)).toBe(2.5);
+});
+
+test('history keeps five-hour and weekly windows independent and ignores legacy samples', () => {
+  const base = 100 * HOUR;
+  const samples = [
+    { provider: 'claude', name: 'a', at: base, remaining: 80, window: 'weekly' as const },
+    { provider: 'claude', name: 'a', at: base + HOUR, remaining: 75, window: 'weekly' as const },
+    { provider: 'claude', name: 'a', at: base, remaining: 90, window: '5h' as const },
+    { provider: 'claude', name: 'a', at: base + HOUR, remaining: 60, window: '5h' as const },
+    { provider: 'claude', name: 'a', at: base + HOUR / 2, remaining: 0 },
+  ];
+  expect(buildDrainSeries(samples, [lane('a', 75, 1)], base, base + HOUR)[0].value).toBe(5);
+  expect(
+    buildDrainSeries(samples, [{ ...lane('a', 60, 1), periodHours: 5 }], base, base + HOUR)[0].value
+  ).toBe(30);
 });
 
 test('projection resets lane to full at its boundary', () => {

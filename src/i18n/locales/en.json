@@ -413,6 +413,7 @@
     "official_client_only_short": "Official only",
     "official_client_only_hint_claude": "Only serve requests from Claude Code (CLI, VS Code, or headless). Requests from other clients are rejected with 403, even with a valid API key. This checks request headers, so it prevents casual use but cannot stop a client that deliberately forges them.",
     "official_client_only_hint_codex": "Only serve requests from official Codex clients (Codex CLI, codex exec, or Desktop). Requests from other clients are rejected with 403, even with a valid API key. This checks request headers, so it prevents casual use but cannot stop a client that deliberately forges them.",
+    "official_client_only_hint_gemini": "Only serve Gemini CLI requests. This header-based check prevents casual use but cannot prevent deliberate header forgery.",
     "policy_alias_name": "Alias",
     "policy_alias_display_name": "Display name",
     "policy_alias_fork": "Keep the original model in listings",
@@ -1595,6 +1596,9 @@
     }
   },
   "quota_management": {
+    "forecast_window": "Quota window",
+    "forecast_window_weekly": "Weekly",
+    "forecast_window_5h": "5-hour",
     "search_label": "Search accounts",
     "search_placeholder": "Search by filename or email",
     "search_empty_title": "No matching accounts",

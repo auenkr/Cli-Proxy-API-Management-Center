@@ -18,8 +18,9 @@ describe('auth file card presentation contract', () => {
     expect(source).not.toContain('getAuthFileIcon');
     expect(source).not.toContain('stateBadge');
     expect(source).toContain('<h3');
-    expect(source).toContain('{identity.primary}');
-    expect(source).toContain('{identity.secondary}');
+    expect(source).toContain('{display(identity.primary)}');
+    expect(source).toContain('{display(identity.secondary)}');
+    expect(source).toContain('title={display(identity.fullName)}');
   });
 
   test('uses one footer toggle and credential-specific accessible names', () => {
@@ -29,10 +30,10 @@ describe('auth file card presentation contract', () => {
     expect(source.match(/<ToggleSwitch/g)).toHaveLength(2);
     expect(footer.match(/<ToggleSwitch/g)).toHaveLength(2);
     expect(header).not.toContain('<ToggleSwitch');
-    expect(header).toContain("ariaLabel={t('auth_files.card_select', { name: file.name })}");
+    expect(header).toContain("ariaLabel={t('auth_files.card_select', { name: display(file.name) })}");
     expect(header).not.toContain('aria-label=');
     expect(footer).toContain('<ToggleSwitch');
-    expect(footer).toContain("t('auth_files.card_toggle', { name: file.name })");
+    expect(footer).toContain("t('auth_files.card_toggle', { name: display(file.name) })");
     expect(footer).toContain('checked={!file.disabled}');
     expect(footer).toContain('statusUpdating[getAuthFileRefreshKey(file)] === true ||');
     expect(footer).toContain('isManualRefreshing');

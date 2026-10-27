@@ -31,13 +31,18 @@ export function summarizeLanes(lanes: TimelineLane[]): ForecastSummary {
   };
 }
 
-const laneKey = (provider: string, name: string) => `${provider}\0${name}`;
+const laneKey = (provider: string, name: string, window: string) =>
+  `${provider}\0${name}\0${window}`;
 
 const groupSamples = (samples: QuotaHistorySample[], lanes: TimelineLane[]) => {
-  const wanted = new Set(lanes.map((lane) => laneKey(lane.provider, lane.name)));
+  const wanted = new Set(
+    lanes.map((lane) => laneKey(lane.provider, lane.name, lane.periodHours === 5 ? '5h' : 'weekly'))
+  );
   const byLane = new Map<string, QuotaHistorySample[]>();
   samples.forEach((sample) => {
-    const key = laneKey(sample.provider, sample.name);
+    // Legacy samples were ambiguous; do not mix them into a window's history.
+    if (!sample.window) return;
+    const key = laneKey(sample.provider, sample.name, sample.window);
     if (!wanted.has(key)) return;
     const list = byLane.get(key) ?? [];
     list.push(sample);

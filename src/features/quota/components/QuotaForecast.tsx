@@ -190,9 +190,16 @@ export function QuotaForecast({ lanes, samples, now }: QuotaForecastProps) {
   const [pastHours, setPastHours] = useState<number>(24);
   const [basisHours, setBasisHours] = useState<number>(24);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [window, setWindow] = useState<'weekly' | '5h'>('weekly');
 
-  const usable = useMemo(() => forecastLanes(lanes), [lanes]);
-  const summary = useMemo(() => summarizeLanes(lanes), [lanes]);
+  const usable = useMemo(
+    () =>
+      forecastLanes(lanes).filter((lane) =>
+        window === '5h' ? lane.periodHours === 5 : lane.periodHours === 168
+      ),
+    [lanes, window]
+  );
+  const summary = useMemo(() => summarizeLanes(usable), [usable]);
 
   const basisDrain = useMemo(
     () => averageDrainPerHour(buildDrainSeries(samples, usable, now - basisHours * HOUR_MS, now)),
@@ -220,7 +227,7 @@ export function QuotaForecast({ lanes, samples, now }: QuotaForecastProps) {
   );
   const drainPeak = drain.reduce((max, p) => Math.max(max, p.value), 0);
 
-  if (usable.length === 0) return null;
+  if (forecastLanes(lanes).length === 0) return null;
 
   const rate = basisDrain === null ? null : Math.round(basisDrain * 10) / 10;
   const horizonMs = futureDays * 24 * HOUR_MS;
@@ -271,6 +278,16 @@ export function QuotaForecast({ lanes, samples, now }: QuotaForecastProps) {
           </div>
 
           <div className={styles.toolbar}>
+            <label className={styles.select}>
+              {t('quota_management.forecast_window')}
+              <select
+                value={window}
+                onChange={(event) => setWindow(event.target.value as 'weekly' | '5h')}
+              >
+                <option value="weekly">{t('quota_management.forecast_window_weekly')}</option>
+                <option value="5h">{t('quota_management.forecast_window_5h')}</option>
+              </select>
+            </label>
             <span className={styles.legend}>
               {tab === 'remaining' ? (
                 <>

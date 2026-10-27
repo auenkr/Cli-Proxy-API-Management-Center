@@ -413,6 +413,7 @@
     "official_client_only_short": "공식만",
     "official_client_only_hint_claude": "Claude Code(CLI, VS Code, 헤드리스)의 요청만 처리합니다. 유효한 API 키가 있어도 다른 클라이언트의 요청은 403으로 거부됩니다. 요청 헤더를 기준으로 하므로 일상적인 오용은 막지만 헤더를 의도적으로 위조하는 클라이언트는 막을 수 없습니다.",
     "official_client_only_hint_codex": "공식 Codex 클라이언트(Codex CLI, codex exec, 데스크톱)의 요청만 처리합니다. 유효한 API 키가 있어도 다른 클라이언트의 요청은 403으로 거부됩니다. 요청 헤더를 기준으로 하므로 일상적인 오용은 막지만 헤더를 의도적으로 위조하는 클라이언트는 막을 수 없습니다.",
+    "official_client_only_hint_gemini": "Gemini CLI 요청만 허용합니다. 헤더 검사는 의도적인 위조를 막을 수 없습니다.",
     "policy_alias_name": "별칭",
     "policy_alias_display_name": "표시 이름",
     "policy_alias_fork": "목록에 원본 모델 유지",
@@ -1595,6 +1596,9 @@
     }
   },
   "quota_management": {
+    "forecast_window": "할당량 기간",
+    "forecast_window_weekly": "주간",
+    "forecast_window_5h": "5시간",
     "search_label": "계정 검색",
     "search_placeholder": "파일명 또는 이메일로 검색",
     "search_empty_title": "일치하는 계정 없음",

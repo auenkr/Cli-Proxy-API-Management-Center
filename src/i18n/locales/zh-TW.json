@@ -411,6 +411,7 @@
     "official_client_only_short": "僅官方",
     "official_client_only_hint_claude": "僅為 Claude Code（CLI、VS Code 或無頭模式）提供服務。其他用戶端的請求即使攜帶有效的 API 金鑰也會被 403 拒絕。此檢查以請求標頭為依據，可防止隨意使用，但無法阻止刻意偽造請求標頭的用戶端。",
     "official_client_only_hint_codex": "僅為官方 Codex 用戶端（Codex CLI、codex exec 或桌面版）提供服務。其他用戶端的請求即使攜帶有效的 API 金鑰也會被 403 拒絕。此檢查以請求標頭為依據，可防止隨意使用，但無法阻止刻意偽造請求標頭的用戶端。",
+    "official_client_only_hint_gemini": "僅允許 Gemini CLI 請求。此檢查依據請求標頭，可防止隨意使用，但無法阻止刻意偽造。",
     "policy_alias_name": "模型別名",
     "policy_alias_display_name": "顯示名稱",
     "policy_alias_fork": "在模型清單中保留原始模型",
@@ -1621,6 +1622,9 @@
     }
   },
   "quota_management": {
+    "forecast_window": "配額視窗",
+    "forecast_window_weekly": "每週",
+    "forecast_window_5h": "5 小時",
     "search_label": "搜尋帳號",
     "search_placeholder": "依檔案名稱或電子郵件搜尋",
     "search_empty_title": "沒有符合的帳號",

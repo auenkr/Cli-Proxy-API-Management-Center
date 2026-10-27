@@ -16,6 +16,8 @@ import type {
 import styles from './AuthFilesToolbar.module.scss';
 
 export type AuthFilesToolbarProps = {
+  showEmails: boolean;
+  onToggleEmails: () => void;
   search: string;
   onSearchChange: (value: string) => void;
   statusFilterMode: AuthFilesStatusFilterMode;
@@ -41,6 +43,8 @@ export type AuthFilesToolbarProps = {
  */
 export function AuthFilesToolbar(props: AuthFilesToolbarProps) {
   const {
+    showEmails,
+    onToggleEmails,
     search,
     onSearchChange,
     statusFilterMode,
@@ -130,6 +134,10 @@ export function AuthFilesToolbar(props: AuthFilesToolbarProps) {
           size="sm"
         />
       </div>
+
+      <button type="button" className={styles.displayButton} aria-pressed={showEmails} onClick={onToggleEmails}>
+        {showEmails ? t('quota_management.hide_emails') : t('quota_management.show_emails')}
+      </button>
 
       <div className={styles.display} ref={displaySettingsRef}>
         <button

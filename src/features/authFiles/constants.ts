@@ -72,7 +72,7 @@ export const TRUTHY_TEXT_VALUES = new Set(['true', '1', 'yes', 'y', 'on']);
 export const FALSY_TEXT_VALUES = new Set(['false', '0', 'no', 'n', 'off']);
 export const AUTH_FILE_WEBSOCKET_PROVIDERS = new Set(['codex', 'xai']);
 export const AUTH_FILE_USING_API_PROVIDERS = new Set(['xai']);
-export const AUTH_FILE_OFFICIAL_CLIENT_ONLY_PROVIDERS = new Set(['claude', 'codex']);
+export const AUTH_FILE_OFFICIAL_CLIENT_ONLY_PROVIDERS = new Set(['claude', 'codex', 'gemini-cli']);
 export const AUTH_FILE_MANUAL_REFRESH_PROVIDERS = new Set([
   'meta',
   'antigravity',

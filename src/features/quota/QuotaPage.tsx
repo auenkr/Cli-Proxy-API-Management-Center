@@ -200,16 +200,27 @@ export function QuotaPage() {
   const forecastLaneList = useMemo(
     () =>
       tabEntries
-        .map((entry) =>
-          buildTimelineLane({
-            name: getQuotaCacheKey(entry.file),
-            displayName: entry.file.name,
-            provider: entry.type,
-            quota: getQuota(entry),
-            maxPeriodHours: FORECAST_MAX_PERIOD_HOURS,
-          })
+        .flatMap((entry) =>
+          [FORECAST_MAX_PERIOD_HOURS, 5].map((maxPeriodHours) =>
+            buildTimelineLane({
+              name: getQuotaCacheKey(entry.file),
+              displayName: entry.file.name,
+              provider: entry.type,
+              quota: getQuota(entry),
+              maxPeriodHours,
+            })
+          )
         )
-        .filter(laneHasWindow),
+        .filter(laneHasWindow)
+        .filter(
+          (lane, index, all) =>
+            all.findIndex(
+              (other) =>
+                other.provider === lane.provider &&
+                other.name === lane.name &&
+                other.periodHours === lane.periodHours
+            ) === index
+        ),
     [tabEntries, getQuota]
   );
   const quotaSamples = useQuotaHistory(forecastLaneList, !disableControls);

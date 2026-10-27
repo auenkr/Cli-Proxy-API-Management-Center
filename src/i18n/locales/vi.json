@@ -364,6 +364,7 @@
     "official_client_only_short": "Chỉ chính thức",
     "official_client_only_hint_claude": "Chỉ phục vụ yêu cầu từ Claude Code (CLI, VS Code hoặc headless). Yêu cầu từ client khác bị từ chối với mã 403, kể cả khi có API key hợp lệ. Việc kiểm tra dựa trên header của yêu cầu nên ngăn được việc dùng tùy tiện nhưng không chặn được client cố tình giả mạo header.",
     "official_client_only_hint_codex": "Chỉ phục vụ yêu cầu từ các client Codex chính thức (Codex CLI, codex exec hoặc Desktop). Yêu cầu từ client khác bị từ chối với mã 403, kể cả khi có API key hợp lệ. Việc kiểm tra dựa trên header của yêu cầu nên ngăn được việc dùng tùy tiện nhưng không chặn được client cố tình giả mạo header.",
+    "official_client_only_hint_gemini": "Chỉ cho phép yêu cầu Gemini CLI. Kiểm tra header không ngăn được việc cố ý giả mạo.",
     "note_label": "Ghi chú",
     "note_placeholder": "Nhập ghi chú, ví dụ: Tài khoản của John",
     "note_hint": "Tùy chọn. Dùng để mô tả mục đích hoặc chủ sở hữu của credential này; để trống nếu không cần.",
@@ -1551,6 +1552,9 @@
     "precise_save_recovery_required": "Không thể đọc lại kết quả lưu. Đã tạm dừng chỉnh sửa. Lưu lại để khôi phục mốc cơ sở của bản nháp, hoặc tải lại cấu hình."
   },
   "quota_management": {
+    "forecast_window": "Khoảng hạn mức",
+    "forecast_window_weekly": "Hàng tuần",
+    "forecast_window_5h": "5 giờ",
     "title": "Quản lý Quota",
     "description": "Theo dõi trạng thái quota OAuth của credential Antigravity, Codex, Claude, Kimi và xAI.",
     "refresh_all_credentials": "Làm mới mọi credential",
