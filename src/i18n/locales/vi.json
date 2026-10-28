@@ -28,7 +28,8 @@
     "cost": "Cost",
     "share": "Share",
     "unpriced": "No price",
-    "unpriced_note": "Some models have no known price and are excluded from cost. Add them to model-pricing.json next to the config file (USD per 1M tokens: input, cache_read, cache_write, output)."
+    "unpriced_note": "Some models have no known price and are excluded from cost. Add them to model-pricing.json next to the config file (USD per 1M tokens: input, cache_read, cache_write, output).",
+    "empty": "No usage recorded yet for this range. Costs appear after requests pass through the proxy."
   },
   "common": {
     "login": "Đăng nhập",
@@ -138,7 +139,8 @@
     "plugin_store": "Cửa hàng Plugin",
     "config_management": "Bảng cấu hình",
     "logs": "Trình xem Log",
-    "system_info": "Thông tin Trung tâm Quản lý"
+    "system_info": "Thông tin Trung tâm Quản lý",
+    "pricing": "Pricing"
   },
   "nav_groups": {
     "operate": "Vận hành",
@@ -158,7 +160,8 @@
     "plugin_store": "Khám phá & cài đặt plugin",
     "logs": "Truy vết yêu cầu",
     "config_management": "Cấu hình gateway",
-    "system_info": "Runtime & chẩn đoán"
+    "system_info": "Runtime & chẩn đoán",
+    "pricing": "API-equivalent cost"
   },
   "dashboard": {
     "hero_verdict_good": "Mọi hệ thống ổn định",

@@ -27,7 +27,6 @@ import { QuotaHeader } from './components/QuotaHeader';
 import { QuotaCard } from './components/QuotaCard';
 import { QuotaTimeline } from './components/QuotaTimeline';
 import { QuotaForecast } from './components/QuotaForecast';
-import { QuotaCost } from './components/QuotaCost';
 import { useQuotaHistory } from './hooks/useQuotaHistory';
 import { maskEmails } from './maskEmail';
 import { buildTimelineLane, laneHasWindow } from './quotaTimelineModel';
@@ -392,8 +391,6 @@ export function QuotaPage() {
         </div>
 
         <QuotaForecast lanes={forecastLaneList} samples={quotaSamples} now={forecastNow} />
-
-        <QuotaCost />
 
         <div className={styles.toolbar}>
           <div className={styles.search}>

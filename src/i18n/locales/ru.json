@@ -28,7 +28,8 @@
     "cost": "Cost",
     "share": "Share",
     "unpriced": "No price",
-    "unpriced_note": "Some models have no known price and are excluded from cost. Add them to model-pricing.json next to the config file (USD per 1M tokens: input, cache_read, cache_write, output)."
+    "unpriced_note": "Some models have no known price and are excluded from cost. Add them to model-pricing.json next to the config file (USD per 1M tokens: input, cache_read, cache_write, output).",
+    "empty": "No usage recorded yet for this range. Costs appear after requests pass through the proxy."
   },
   "common": {
     "login": "Войти",
@@ -138,7 +139,8 @@
     "plugin_store": "Магазин плагинов",
     "config_management": "Панель конфигурации",
     "logs": "Просмотр логов",
-    "system_info": "Информация системы"
+    "system_info": "Информация системы",
+    "pricing": "Pricing"
   },
   "nav_groups": {
     "operate": "Работа",
@@ -157,7 +159,8 @@
     "plugin_store": "Поиск и установка плагинов",
     "logs": "Трассировка запросов",
     "config_management": "Базовая конфигурация шлюза",
-    "system_info": "Состояние и диагностика"
+    "system_info": "Состояние и диагностика",
+    "pricing": "API-equivalent cost"
   },
   "dashboard": {
     "hero_verdict_good": "Всё стабильно",

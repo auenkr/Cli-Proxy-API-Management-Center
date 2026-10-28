@@ -70,8 +70,26 @@ export function QuotaCost() {
     return { start, end, bucketMs, max, paths: grouped.map(path) };
   }, [report, providers, days]);
 
-  if (failed && !report) return null;
-  if (!report || report.requests === 0) return null;
+  if (!report) return failed ? <section className={styles.panel}>{t('quota_cost.empty')}</section> : null;
+  if (report.requests === 0) {
+    return (
+      <section className={styles.panel}>
+        <div className={styles.ranges} role="group">
+          {RANGES.map((range) => (
+            <button
+              key={range}
+              type="button"
+              className={`${styles.rangeBtn} ${days === range ? styles.rangeActive : ''}`.trim()}
+              onClick={() => setDays(range)}
+            >
+              {range === 1 ? t('quota_cost.range_24h') : t('quota_cost.range_days', { count: range })}
+            </button>
+          ))}
+        </div>
+        <div className={styles.sub}>{t('quota_cost.empty')}</div>
+      </section>
+    );
+  }
 
   const costs = report.costs;
   const typeRows = [

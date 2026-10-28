@@ -28,7 +28,8 @@
     "cost": "Cost",
     "share": "Share",
     "unpriced": "No price",
-    "unpriced_note": "Some models have no known price and are excluded from cost. Add them to model-pricing.json next to the config file (USD per 1M tokens: input, cache_read, cache_write, output)."
+    "unpriced_note": "Some models have no known price and are excluded from cost. Add them to model-pricing.json next to the config file (USD per 1M tokens: input, cache_read, cache_write, output).",
+    "empty": "No usage recorded yet for this range. Costs appear after requests pass through the proxy."
   },
   "common": {
     "login": "Login",
@@ -138,7 +139,8 @@
     "plugin_store": "Plugin Store",
     "config_management": "Config Panel",
     "logs": "Logs Viewer",
-    "system_info": "Management Center Info"
+    "system_info": "Management Center Info",
+    "pricing": "Pricing"
   },
   "nav_groups": {
     "operate": "Operate",
@@ -158,7 +160,8 @@
     "plugin_store": "Discover & install plugins",
     "logs": "Request tracing",
     "config_management": "Gateway configuration",
-    "system_info": "Runtime & diagnostics"
+    "system_info": "Runtime & diagnostics",
+    "pricing": "API-equivalent cost"
   },
   "dashboard": {
     "hero_verdict_good": "All systems steady",

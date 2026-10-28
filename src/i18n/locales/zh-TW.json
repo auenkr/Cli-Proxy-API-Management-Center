@@ -28,7 +28,8 @@
     "cost": "Cost",
     "share": "Share",
     "unpriced": "No price",
-    "unpriced_note": "Some models have no known price and are excluded from cost. Add them to model-pricing.json next to the config file (USD per 1M tokens: input, cache_read, cache_write, output)."
+    "unpriced_note": "Some models have no known price and are excluded from cost. Add them to model-pricing.json next to the config file (USD per 1M tokens: input, cache_read, cache_write, output).",
+    "empty": "No usage recorded yet for this range. Costs appear after requests pass through the proxy."
   },
   "common": {
     "login": "登入",
@@ -138,7 +139,8 @@
     "plugin_store": "插件商店",
     "config_management": "設定面板",
     "logs": "記錄檢視",
-    "system_info": "中心資訊"
+    "system_info": "中心資訊",
+    "pricing": "Pricing"
   },
   "nav_groups": {
     "operate": "運行",
@@ -158,7 +160,8 @@
     "plugin_store": "探索並安裝插件",
     "logs": "請求追蹤與排查",
     "config_management": "閘道基礎設定",
-    "system_info": "運行與診斷資訊"
+    "system_info": "運行與診斷資訊",
+    "pricing": "API-equivalent cost"
   },
   "dashboard": {
     "hero_verdict_good": "運行平穩",
