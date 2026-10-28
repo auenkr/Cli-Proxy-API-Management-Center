@@ -1599,6 +1599,7 @@
     }
   },
   "quota_management": {
+    "forecast_hours": "ч.",
     "show_emails": "Показать адреса почты",
     "hide_emails": "Скрыть адреса почты",
     "forecast_window": "Окно квоты",

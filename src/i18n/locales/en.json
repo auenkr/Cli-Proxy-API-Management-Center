@@ -1596,6 +1596,7 @@
     }
   },
   "quota_management": {
+    "forecast_hours": "hours",
     "show_emails": "Show emails",
     "hide_emails": "Hide emails",
     "forecast_window": "Quota window",

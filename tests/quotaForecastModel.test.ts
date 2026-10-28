@@ -71,3 +71,17 @@ test('projection resets lane to full at its boundary', () => {
   expect(nextReset?.gain ?? 0).toBeGreaterThan(80);
   expect(points[points.length - 1].value).toBeGreaterThan(90);
 });
+
+test('five-hour projections cover both hourly horizons and include repeated resets', () => {
+  const now = 1000 * HOUR;
+  const lanes = [{ ...lane('a', 50, now + HOUR), periodHours: 5 }];
+  for (const hours of [12, 24]) {
+    const projection = projectRemaining(lanes, 10, now, hours * HOUR);
+    expect(projection.points.at(-1)?.at).toBe(now + hours * HOUR);
+    for (let resetHour = 1; resetHour <= hours; resetHour += 5) {
+      const resetAt = now + resetHour * HOUR;
+      expect(projection.points.find((point) => point.at === resetAt)?.value).toBe(100);
+      expect(projection.points.find((point) => point.at === resetAt - 1)?.value).toBeLessThan(100);
+    }
+  }
+});

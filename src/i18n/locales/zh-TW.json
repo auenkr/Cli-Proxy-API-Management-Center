@@ -1622,6 +1622,7 @@
     }
   },
   "quota_management": {
+    "forecast_hours": "小時",
     "show_emails": "顯示電子郵件",
     "hide_emails": "隱藏電子郵件",
     "forecast_window": "配額視窗",

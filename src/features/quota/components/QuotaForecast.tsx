@@ -23,7 +23,8 @@ const W = 1000;
 const H = 260;
 const PAD = { left: 48, right: 12, top: 12, bottom: 28 };
 
-const FUTURE_OPTIONS = [3, 7, 14] as const;
+const FUTURE_DAYS = [3, 7, 14] as const;
+const FUTURE_HOURS = [12, 24] as const;
 const PAST_OPTIONS = [
   { hours: 6, key: '6h' },
   { hours: 24, key: '24h' },
@@ -187,10 +188,13 @@ export function QuotaForecast({ lanes, samples, now }: QuotaForecastProps) {
   const [open, setOpen] = useState(true);
   const [tab, setTab] = useState<ChartTab>('remaining');
   const [futureDays, setFutureDays] = useState<number>(7);
+  const [futureHours, setFutureHours] = useState<number>(12);
   const [pastHours, setPastHours] = useState<number>(24);
   const [basisHours, setBasisHours] = useState<number>(24);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [window, setWindow] = useState<'weekly' | '5h'>('weekly');
+
+  const horizonMs = (window === '5h' ? futureHours : futureDays * 24) * HOUR_MS;
 
   const usable = useMemo(
     () =>
@@ -207,8 +211,8 @@ export function QuotaForecast({ lanes, samples, now }: QuotaForecastProps) {
   );
 
   const projection = useMemo(
-    () => projectRemaining(usable, basisDrain ?? 0, now, futureDays * 24 * HOUR_MS),
-    [usable, basisDrain, now, futureDays]
+    () => projectRemaining(usable, basisDrain ?? 0, now, horizonMs),
+    [usable, basisDrain, now, horizonMs]
   );
 
   const history = useMemo(
@@ -230,7 +234,6 @@ export function QuotaForecast({ lanes, samples, now }: QuotaForecastProps) {
   if (forecastLanes(lanes).length === 0) return null;
 
   const rate = basisDrain === null ? null : Math.round(basisDrain * 10) / 10;
-  const horizonMs = futureDays * 24 * HOUR_MS;
 
   return (
     <section className={styles.panel}>
@@ -310,10 +313,20 @@ export function QuotaForecast({ lanes, samples, now }: QuotaForecastProps) {
                 ? t('quota_management.forecast_next', { defaultValue: 'Next' })
                 : t('quota_management.forecast_show', { defaultValue: 'Show' })}
               {tab === 'remaining' ? (
-                <select value={futureDays} onChange={(e) => setFutureDays(Number(e.target.value))}>
-                  {FUTURE_OPTIONS.map((days) => (
-                    <option key={days} value={days}>
-                      {days} {t('quota_management.forecast_days', { defaultValue: 'days' })}
+                <select
+                  value={window === '5h' ? futureHours : futureDays}
+                  onChange={(e) =>
+                    window === '5h'
+                      ? setFutureHours(Number(e.target.value))
+                      : setFutureDays(Number(e.target.value))
+                  }
+                >
+                  {(window === '5h' ? FUTURE_HOURS : FUTURE_DAYS).map((duration) => (
+                    <option key={duration} value={duration}>
+                      {duration}{' '}
+                      {window === '5h'
+                        ? t('quota_management.forecast_hours')
+                        : t('quota_management.forecast_days', { defaultValue: 'days' })}
                     </option>
                   ))}
                 </select>

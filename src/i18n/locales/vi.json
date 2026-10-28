@@ -1552,6 +1552,7 @@
     "precise_save_recovery_required": "Không thể đọc lại kết quả lưu. Đã tạm dừng chỉnh sửa. Lưu lại để khôi phục mốc cơ sở của bản nháp, hoặc tải lại cấu hình."
   },
   "quota_management": {
+    "forecast_hours": "giờ",
     "show_emails": "Hiện email",
     "hide_emails": "Ẩn email",
     "forecast_window": "Khoảng hạn mức",
