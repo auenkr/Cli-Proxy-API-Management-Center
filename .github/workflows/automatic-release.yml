@@ -1,0 +1,49 @@
+name: Automatic management panel release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: automatic-management-release
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.3'
+      - run: bun install --frozen-lockfile
+      - name: Verify and build
+        run: bun run verify
+        env:
+          VERSION: main-${{ github.sha }}
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          latest_sha="$(gh api "repos/${GH_REPO}/commits/main" --jq .sha)"
+          if [ "$latest_sha" != "$GITHUB_SHA" ]; then
+            echo 'A newer main commit exists; skipping this release.'
+            exit 0
+          fi
+          cp dist/index.html dist/management.html
+          tag="auto-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          gh release create "$tag" dist/management.html \
+            --target "$GITHUB_SHA" \
+            --title "Management panel ${GITHUB_SHA:0:12}" \
+            --notes "Automated build of main commit ${GITHUB_SHA}." \
+            --latest
