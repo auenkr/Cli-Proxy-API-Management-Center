@@ -111,7 +111,8 @@
     "plugin_store": "Eklenti Mağazası",
     "config_management": "Yapılandırma Paneli",
     "logs": "Günlük Görüntüleyici",
-    "system_info": "Yönetim Merkezi Bilgisi"
+    "system_info": "Yönetim Merkezi Bilgisi",
+    "pricing": "Fiyatlandırma"
   },
   "nav_groups": {
     "operate": "İşlet",
@@ -132,7 +133,8 @@
     "plugin_store": "Eklentileri Keşfet ve Kur",
     "logs": "İstek İzleme",
     "config_management": "Ağ Geçidi Yapılandırması",
-    "system_info": "Çalışma Zamanı ve Tanılama"
+    "system_info": "Çalışma Zamanı ve Tanılama",
+    "pricing": "API eşdeğer maliyeti"
   },
   "dashboard": {
     "hero_verdict_good": "Tüm Sistemler Dengede",
@@ -440,7 +442,12 @@
     "quota_refresh_single": "Kotayı Yenile",
     "quota_refresh_hint": "Yalnızca Bu Kimlik Bilgisinin Kotasını Yenile",
     "quota_refresh_success": "“{{name}}” için Kota Yenilendi",
-    "quota_refresh_failed": "“{{name}}” için Kota Yenilenemedi: {{message}}"
+    "quota_refresh_failed": "“{{name}}” için Kota Yenilenemedi: {{message}}",
+    "official_client_only_hint_claude": "Yalnızca Claude Code'dan (CLI, VS Code veya headless) gelen istekleri karşılar. Diğer istemcilerden gelen istekler geçerli bir API anahtarıyla bile 403 ile reddedilir. Bu, istek başlıklarını kontrol eder; gelişigüzel kullanımı engeller ancak başlıkları kasıtlı olarak taklit eden bir istemciyi durduramaz.",
+    "official_client_only_hint_codex": "Yalnızca resmi Codex istemcilerinden (Codex CLI, codex exec veya Desktop) gelen istekleri karşılar. Diğer istemcilerden gelen istekler geçerli bir API anahtarıyla bile 403 ile reddedilir. Bu, istek başlıklarını kontrol eder; gelişigüzel kullanımı engeller ancak başlıkları kasıtlı olarak taklit eden bir istemciyi durduramaz.",
+    "official_client_only_hint_gemini": "Yalnızca Gemini CLI isteklerini karşılar. Bu başlık tabanlı kontrol gelişigüzel kullanımı engeller ancak kasıtlı başlık taklidini önleyemez.",
+    "official_client_only_label": "Yalnızca resmi istemci (official_client_only)",
+    "official_client_only_short": "Yalnızca resmi"
   },
   "antigravity_subscription": {
     "plan_unknown": "Bilinmiyor",
@@ -1506,7 +1513,10 @@
           "fair": "Orta",
           "good": "İyi",
           "strong": "Güçlü"
-        }
+        },
+        "allowed_models": "İzin verilen model kimlikleri (satır başına bir tane)",
+        "models_hint": "Kapalı: tüm modellere izin verilir. Açık: yalnızca burada listelenen tam genel model kimliklerine izin verilir. Boş liste tüm modelleri engeller.",
+        "restrict_models": "Model erişimini kısıtla"
       },
       "payload_rules": {
         "rule": "Kural",
@@ -1632,7 +1642,13 @@
     "weekday_wed": "Çar",
     "weekday_thu": "Per",
     "weekday_fri": "Cum",
-    "weekday_sat": "Cmt"
+    "weekday_sat": "Cmt",
+    "forecast_hours": "saat",
+    "forecast_window": "Kota penceresi",
+    "forecast_window_5h": "5 saat",
+    "forecast_window_weekly": "Haftalık",
+    "hide_emails": "E-postaları gizle",
+    "show_emails": "E-postaları göster"
   },
   "routing": {
     "title": "Yönlendirme",
@@ -2083,7 +2099,7 @@
       "activeCount": "{{active}} / {{total}} Aktif"
     },
     "providerNames": {
-       "aiCodeMirror": "AIcodemirror",
+      "aiCodeMirror": "AIcodemirror",
       "meta": "Muse (Meta)",
       "gemini": "Gemini",
       "interactions": "Interactions API",
@@ -2146,8 +2162,8 @@
       "urlMode": "{{provider}} URL'si",
       "urlHint": "Tüm URL'ler Aynı API Kurallarını Kullanır. Kayıt Yalnızca Geçerli Gruplanmış Protokolün Uç Noktasını Yazar.",
       "urlOptions": {
-         "aiCodeMirrorGlobal": "Yüksek Korumalı Küresel Rota",
-         "aiCodeMirrorDomestic": "Çin Ana Karası için Optimize Edilmiş Rota",
+        "aiCodeMirrorGlobal": "Yüksek Korumalı Küresel Rota",
+        "aiCodeMirrorDomestic": "Çin Ana Karası için Optimize Edilmiş Rota",
         "standard": "Standart URL",
         "direct": "Doğrudan URL",
         "domestic": "Çin Ana Karası Rotası",
@@ -2156,8 +2172,8 @@
         "global": "Küresel"
       },
       "urlOptionDescriptions": {
-         "aiCodeMirrorGlobal": "Küresel erişim için yüksek korumalı bir rota.",
-         "aiCodeMirrorDomestic": "Çin ana karasındaki ağlar için optimize edilmiş bir rota.",
+        "aiCodeMirrorGlobal": "Küresel erişim için yüksek korumalı bir rota.",
+        "aiCodeMirrorDomestic": "Çin ana karasındaki ağlar için optimize edilmiş bir rota.",
         "domestic": "Çin Ana Karasındaki Kullanıcılar ve İş Yükleri için. Ana Kara Ağlarında Genellikle Daha Düşük Gecikme.",
         "overseas": "Yurt Dışı Dağıtımlar, Sınır Ötesi Erişim veya Yurt Dışı Modeller Gerektiren İş Yükleri için.",
         "mainlandChinaRecommended": "Çin Ana Karası Ağlarındaki Kullanıcılar ve İş Yükleri için Önerilir.",
@@ -2428,5 +2444,37 @@
     "error": "Bağlama Başarısız Oldu. Lütfen Yeniden Başla.",
     "unsupported": "Bu Arka Uç SIWC Bağlamayı Desteklemiyor.",
     "expired": "Bağlama Oturumunun Süresi Doldu. Lütfen Yeniden Başla."
+  },
+  "quota_cost": {
+    "breakdown": "Döküm",
+    "by_hour": "Saat",
+    "by_model": "Model",
+    "cache_savings": "Önbellek tasarrufu",
+    "cached_input": "Önbellekten girdi",
+    "cost": "Maliyet",
+    "cost_by_type": "Türe göre maliyet",
+    "daily_cost": "Günlük maliyet",
+    "empty": "Bu aralık için henüz kullanım kaydedilmedi. Maliyetler, istekler proxy üzerinden geçtikten sonra görünür.",
+    "estimate": "API tahmini",
+    "hour": "Saat",
+    "hourly_cost": "Saatlik maliyet",
+    "model": "Model",
+    "processed": "İşlenen token'lar",
+    "range_24h": "24s",
+    "range_days": "{{count}}g",
+    "requests": "{{count}} istek",
+    "share": "Pay",
+    "tokens": "token",
+    "uncached_input": "Önbelleksiz girdi",
+    "unpriced": "Fiyat yok",
+    "unpriced_note": "Bazı modellerin bilinen bir fiyatı yok ve maliyete dahil edilmedi. Bunları yapılandırma dosyasının yanındaki model-pricing.json dosyasına ekleyin (1M token başına USD: input, cache_read, cache_write, output)."
+  },
+  "quota_tokens": {
+    "cache_read": "Önbellek okuma",
+    "cache_write": "Önbellek yazma",
+    "input": "Girdi",
+    "output": "Çıktı",
+    "thinking": "Düşünme",
+    "title": "Token maliyeti"
   }
 }
