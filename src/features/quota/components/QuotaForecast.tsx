@@ -192,7 +192,7 @@ export function QuotaForecast({ lanes, samples, now }: QuotaForecastProps) {
   const [pastHours, setPastHours] = useState<number>(24);
   const [basisHours, setBasisHours] = useState<number>(24);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [window, setWindow] = useState<'weekly' | '5h'>('weekly');
+  const [window, setWindow] = useState<'weekly' | '5h'>('5h');
 
   const horizonMs = (window === '5h' ? futureHours : futureDays * 24) * HOUR_MS;
 
