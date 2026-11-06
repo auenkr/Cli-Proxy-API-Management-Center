@@ -103,6 +103,8 @@ export function ApiKeysField({ values, disabled, onChange }: SharedFieldProps) {
           value={values.apiKeysText}
           modelRestrictions={values.apiKeyModels}
           onModelRestrictionsChange={(apiKeyModels) => onChange({ apiKeyModels })}
+          names={values.apiKeyNames}
+          onNamesChange={(apiKeyNames) => onChange({ apiKeyNames })}
           disabled={disabled}
           onChange={(apiKeysText) => onChange({ apiKeysText })}
         />

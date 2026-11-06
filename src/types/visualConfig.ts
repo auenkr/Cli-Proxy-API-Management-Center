@@ -168,6 +168,8 @@ export type VisualConfigValues = {
   /** Client authentication keys at access.api-keys (never the upstream api-keys map). */
   apiKeysText: string;
   apiKeyModels: Record<string, string[]>;
+  /** access.api-key-names: SHA-256(key) hex -> display name. */
+  apiKeyNames: Record<string, string>;
   pluginsEnabled: boolean;
   pluginStoreSources: string[];
   pluginStoreAuth: PluginStoreAuthRule[];
@@ -271,6 +273,7 @@ export const DEFAULT_VISUAL_VALUES: VisualConfigValues = {
   authDir: '',
   apiKeysText: '',
   apiKeyModels: {},
+  apiKeyNames: {},
   pluginsEnabled: false,
   pluginStoreSources: [],
   pluginStoreAuth: [],

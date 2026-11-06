@@ -1261,6 +1261,10 @@ function getNextDirtyFields(
     updateDirty('apiKeyModels', JSON.stringify(nextValues.apiKeyModels) === JSON.stringify(baselineValues.apiKeyModels));
   }
 
+  if (Object.prototype.hasOwnProperty.call(patch, 'apiKeyNames')) {
+    updateDirty('apiKeyNames', JSON.stringify(nextValues.apiKeyNames) === JSON.stringify(baselineValues.apiKeyNames));
+  }
+
   if (Object.prototype.hasOwnProperty.call(patch, 'pluginStoreSources')) {
     updateDirty(
       'pluginStoreSources',
@@ -1467,6 +1471,11 @@ function parseVisualValuesFromYaml(yamlContent: string): VisualConfigValues {
             ? models.filter((model): model is string => typeof model === 'string')
             : [],
         ]
+      )
+    ),
+    apiKeyNames: Object.fromEntries(
+      Object.entries(asRecord(asRecord(parsed.access)?.['api-key-names']) ?? {}).filter(
+        (entry): entry is [string, string] => typeof entry[1] === 'string' && !!entry[1].trim()
       )
     ),
     pluginsEnabled: Boolean(plugins?.enabled),
@@ -1754,6 +1763,14 @@ export function useVisualConfig() {
 
         if (dirtyFields.has('apiKeyModels')) {
           doc.setIn(['access', 'api-key-models'], values.apiKeyModels);
+        }
+
+        if (dirtyFields.has('apiKeyNames')) {
+          if (Object.keys(values.apiKeyNames).length > 0) {
+            doc.setIn(['access', 'api-key-names'], values.apiKeyNames);
+          } else if (docHas(doc, ['access', 'api-key-names'])) {
+            doc.deleteIn(['access', 'api-key-names']);
+          }
         }
 
         const pluginsDirty =

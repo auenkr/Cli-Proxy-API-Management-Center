@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { useAuthStore, useNotificationStore } from '@/stores';
 import { useModelsStore } from '@/stores/useModelsStore';
-import { apiKeyNameFingerprint, readApiKeyNames, saveApiKeyName } from '../../apiKeyNames';
+import { apiKeyNameFingerprint } from '../../apiKeyNames';
 import { copyToClipboard } from '@/utils/clipboard';
 import { makeClientId } from '@/types/visualConfig';
 import { generateSecureApiKey } from '@/utils/apiKey';
@@ -17,6 +17,8 @@ interface ApiKeysCardEditorProps {
   value: string;
   modelRestrictions: Record<string, string[]>;
   onModelRestrictionsChange: (value: Record<string, string[]>) => void;
+  names: Record<string, string>;
+  onNamesChange: (value: Record<string, string>) => void;
   disabled?: boolean;
   onChange: (nextValue: string) => void;
 }
@@ -30,11 +32,12 @@ function ScopedApiKeysCardEditor({
   value,
   modelRestrictions,
   onModelRestrictionsChange,
+  names,
+  onNamesChange,
   disabled,
   onChange,
   apiBase,
 }: ApiKeysCardEditorProps & { apiBase: string }) {
-  const [names, setNames] = useState(() => readApiKeyNames(apiBase));
   const [nameValue, setNameValue] = useState('');
   const [restrictModels, setRestrictModels] = useState(false);
   const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set());
@@ -52,8 +55,8 @@ function ScopedApiKeysCardEditor({
     [value]
   );
   const nameFingerprints = useMemo(
-    () => apiKeys.map((key) => apiKeyNameFingerprint(apiBase, key)),
-    [apiBase, apiKeys]
+    () => apiKeys.map((key) => apiKeyNameFingerprint(key)),
+    [apiKeys]
   );
   const [apiKeyIds, setApiKeyIds] = useState(() => apiKeys.map(() => makeClientId()));
   const renderApiKeyIds = useMemo(() => {
@@ -88,9 +91,7 @@ function ScopedApiKeysCardEditor({
 
   const openEditModal = (apiKeyId: string) => {
     const editingIndex = renderApiKeyIds.findIndex((id) => id === apiKeyId);
-    const latestNames = readApiKeyNames(apiBase);
-    setNames(latestNames);
-    setNameValue(latestNames[nameFingerprints[editingIndex]] ?? '');
+    setNameValue(names[nameFingerprints[editingIndex]] ?? '');
     setEditingApiKeyId(apiKeyId);
     setInputValue(apiKeys[editingIndex] ?? '');
     const key = apiKeys[editingIndex];
@@ -121,6 +122,11 @@ function ScopedApiKeysCardEditor({
     const nextRestrictions = { ...modelRestrictions };
     delete nextRestrictions[apiKeys[index]];
     onModelRestrictionsChange(nextRestrictions);
+    if (nameFingerprints[index] in names) {
+      const nextNames = { ...names };
+      delete nextNames[nameFingerprints[index]];
+      onNamesChange(nextNames);
+    }
     updateApiKeys(apiKeys.filter((_, i) => i !== index));
   };
 
@@ -142,11 +148,10 @@ function ScopedApiKeysCardEditor({
       editingApiKeyId === null
         ? [...apiKeys, trimmed]
         : apiKeys.map((key, idx) => (idx === editingIndex ? trimmed : key));
-    if (!saveApiKeyName(apiBase, trimmed, nameValue)) {
-      setFormError(t('config_management.visual.api_keys.name_save_error'));
-      return;
-    }
-    setNames(readApiKeyNames(apiBase));
+    const nextNames = { ...names };
+    if (editingIndex >= 0) delete nextNames[nameFingerprints[editingIndex]];
+    if (nameValue.trim()) nextNames[apiKeyNameFingerprint(trimmed)] = nameValue.trim();
+    if (JSON.stringify(nextNames) !== JSON.stringify(names)) onNamesChange(nextNames);
     const nextRestrictions = { ...modelRestrictions };
     if (editingIndex >= 0 && apiKeys[editingIndex] !== trimmed) {
       delete nextRestrictions[apiKeys[editingIndex]];
@@ -165,7 +170,6 @@ function ScopedApiKeysCardEditor({
       delete nextRestrictions[trimmed];
     }
     onModelRestrictionsChange(nextRestrictions);
-    // Retain old fingerprints: configuration edits can still be discarded or fail to save.
     if (editingApiKeyId === null) {
       setApiKeyIds([...renderApiKeyIds, makeClientId()]);
     }
