@@ -52,7 +52,10 @@ export function useQuotaActions(
             [cacheKey]: successState,
           }));
           void enrichQuotaInBackground(adapter, file, data, successState, t);
-          showNotification(t('auth_files.quota_refresh_success', { name: displayNameFor(file.name) }), 'success');
+          showNotification(
+            t('auth_files.quota_refresh_success', { name: displayNameFor(file.name) }),
+            'success'
+          );
         });
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : t('common.unknown_error');
@@ -100,7 +103,10 @@ export function useQuotaActions(
                 ...prev,
                 [cacheKey]: adapter.buildSuccessState(data),
               }));
-              showNotification(t('codex_quota.reset_success', { name: displayNameFor(file.name) }), 'success');
+              showNotification(
+                t('codex_quota.reset_success', { name: displayNameFor(file.name) }),
+                'success'
+              );
             });
           } catch (err: unknown) {
             const message = err instanceof Error ? err.message : t('common.unknown_error');

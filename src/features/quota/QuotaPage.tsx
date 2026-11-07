@@ -293,7 +293,10 @@ export function QuotaPage() {
   /* ---------- 加载与操作 ---------- */
 
   const { batchLoading, loadQuota } = useQuotaBatchLoader();
-  const { resettingQuotaName, refreshQuota, resetQuota } = useQuotaActions(disableControls, maskedDisplayName);
+  const { resettingQuotaName, refreshQuota, resetQuota } = useQuotaActions(
+    disableControls,
+    maskedDisplayName
+  );
 
   const pendingRefreshRef = useRef<number | null>(null);
   const prevLoadingRef = useRef(loading);
@@ -390,7 +393,13 @@ export function QuotaPage() {
           />
         </div>
 
-        <QuotaForecast lanes={forecastLaneList} samples={quotaSamples} now={forecastNow} />
+        <QuotaForecast
+          lanes={forecastLaneList}
+          samples={quotaSamples}
+          now={forecastNow}
+          displayNameFor={maskedDisplayName}
+          resolvedTheme={resolvedTheme}
+        />
 
         <div className={styles.toolbar}>
           <div className={styles.search}>

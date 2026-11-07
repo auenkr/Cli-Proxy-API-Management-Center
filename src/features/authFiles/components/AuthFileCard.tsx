@@ -271,7 +271,12 @@ export function AuthFileCard(props: AuthFileCardProps) {
       )}
 
       {showQuotaLayout && quotaType && (
-        <AuthFileQuotaSection file={file} quotaType={quotaType} disableControls={disableControls} />
+        <AuthFileQuotaSection
+          file={file}
+          quotaType={quotaType}
+          disableControls={disableControls}
+          showEmails={showEmails}
+        />
       )}
 
       <footer className={styles.actions}>
@@ -349,8 +354,8 @@ export function AuthFileCard(props: AuthFileCardProps) {
                   providerKey === 'gemini-cli'
                     ? 'auth_files.official_client_only_hint_gemini'
                     : providerKey === 'codex'
-                    ? 'auth_files.official_client_only_hint_codex'
-                    : 'auth_files.official_client_only_hint_claude'
+                      ? 'auth_files.official_client_only_hint_codex'
+                      : 'auth_files.official_client_only_hint_claude'
                 )}
               >
                 <span className={styles.toggleLabel}>

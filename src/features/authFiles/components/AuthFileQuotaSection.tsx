@@ -18,6 +18,7 @@ import { hasClaudeUsageData } from '@/features/quota/providers/claude/data';
 import { useTokenUsage } from '@/features/quota/hooks/useTokenUsage';
 import { hasTokenCostData } from '@/features/quota/tokenUsage';
 import { TokenCostDistribution } from '@/features/quota/components/TokenCostDistribution';
+import { maskEmails } from '@/features/quota/maskEmail';
 import styles from './AuthFileQuota.module.scss';
 
 /** Bind the auth-file host's compact styles to the quota rendering contract. */
@@ -35,10 +36,12 @@ export type AuthFileQuotaSectionProps = {
   file: AuthFileItem;
   quotaType: QuotaProviderType;
   disableControls: boolean;
+  showEmails?: boolean;
 };
 
 export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
-  const { file, quotaType, disableControls } = props;
+  const { file, quotaType, disableControls, showEmails = false } = props;
+  const displayName = showEmails ? file.name : maskEmails(file.name);
   const { t } = useTranslation();
   const showNotification = useNotificationStore((state) => state.showNotification);
   const showConfirmation = useNotificationStore((state) => state.showConfirmation);
@@ -70,7 +73,6 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
   const refreshQuotaForFile = useCallback(async () => {
     if (disableControls) return;
     if (isRuntimeOnlyAuthFile(file)) return;
-    if (file.disabled) return;
     if (quota?.status === 'loading' || resettingQuota) return;
 
     const cacheGeneration = captureQuotaCacheGeneration(file.name);
@@ -87,7 +89,7 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
           ...prev,
           [cacheKey]: adapter.buildSuccessState(data),
         }));
-        showNotification(t('auth_files.quota_refresh_success', { name: file.name }), 'success');
+        showNotification(t('auth_files.quota_refresh_success', { name: displayName }), 'success');
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : t('common.unknown_error');
@@ -98,7 +100,10 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
           [cacheKey]: adapter.buildErrorState(message, status),
         }));
         showNotification(
-          t('auth_files.quota_refresh_failed', { name: file.name, message }),
+          t('auth_files.quota_refresh_failed', {
+            name: displayName,
+            message: showEmails ? message : maskEmails(message),
+          }),
           'error'
         );
       });
@@ -107,9 +112,11 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
     adapter,
     cacheKey,
     disableControls,
+    displayName,
     file,
     quota?.status,
     resettingQuota,
+    showEmails,
     showNotification,
     t,
     updateQuotaState,
@@ -121,7 +128,7 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
   useEffect(() => {
     if (quotaAutoLoadRef.current) return;
     if (quota?.status !== undefined && quota.status !== 'idle') return;
-    if (disableControls || isRuntimeOnlyAuthFile(file) || file.disabled) return;
+    if (disableControls || isRuntimeOnlyAuthFile(file)) return;
     quotaAutoLoadRef.current = true;
     void refreshQuotaForFile();
   }, [disableControls, file, quota?.status, refreshQuotaForFile]);
@@ -138,7 +145,7 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
 
     showConfirmation({
       title: t('codex_quota.reset_confirm_title'),
-      message: t('codex_quota.reset_confirm_message', { name: file.name }),
+      message: t('codex_quota.reset_confirm_message', { name: displayName }),
       confirmText: t('codex_quota.reset_confirm_button'),
       variant: 'primary',
       onConfirm: async () => {
@@ -151,12 +158,18 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
               ...prev,
               [cacheKey]: adapter.buildSuccessState(data),
             }));
-            showNotification(t('codex_quota.reset_success', { name: file.name }), 'success');
+            showNotification(t('codex_quota.reset_success', { name: displayName }), 'success');
           });
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : t('common.unknown_error');
           commitIfQuotaCacheCurrent(cacheGeneration, () => {
-            showNotification(t('codex_quota.reset_failed', { name: file.name, message }), 'error');
+            showNotification(
+              t('codex_quota.reset_failed', {
+                name: displayName,
+                message: showEmails ? message : maskEmails(message),
+              }),
+              'error'
+            );
           });
         } finally {
           setResettingQuota(false);
@@ -167,18 +180,20 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
     adapter,
     cacheKey,
     disableControls,
+    displayName,
     file,
     quota?.status,
     resettingQuota,
     showConfirmation,
+    showEmails,
     showNotification,
     t,
     updateQuotaState,
   ]);
 
   const quotaStatus = quota?.status ?? 'idle';
-  const canRefreshQuota = !disableControls && !file.disabled && !resettingQuota;
-  const canUseResetQuota = canRefreshQuota && quotaStatus !== 'loading';
+  const canRefreshQuota = !disableControls && !resettingQuota;
+  const canUseResetQuota = canRefreshQuota && !file.disabled && quotaStatus !== 'loading';
   // Idle state already renders a clickable "click to refresh" prompt; only offer the
   // explicit refresh button once quota has been requested so it can be refreshed again.
   const showRefreshQuotaAction = quotaStatus !== 'idle';
