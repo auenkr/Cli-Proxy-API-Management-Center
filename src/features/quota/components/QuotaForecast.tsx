@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { TYPE_COLORS } from '@/utils/quota';
 import type { ResolvedTheme } from '@/types';
 import type { QuotaHistorySample } from '@/services/api/quotaHistory';
+import { QUOTA_TAB_ORDER } from '../constants';
 import { HOUR_MS } from '../quotaTimelineModel';
 import type { TimelineLane } from '../quotaTimelineModel';
 import {
@@ -465,7 +466,12 @@ export function QuotaForecast({
         list.push(lane);
         groups.set(lane.provider, list);
       });
-    return [...groups.entries()];
+    // Claude first, Codex second, then everything else in tab order.
+    const rank = (provider: string) => {
+      const index = QUOTA_TAB_ORDER.indexOf(provider as (typeof QUOTA_TAB_ORDER)[number]);
+      return index === -1 ? QUOTA_TAB_ORDER.length : index;
+    };
+    return [...groups.entries()].sort((a, b) => rank(a[0]) - rank(b[0]));
   }, [lanes, quotaWindow]);
 
   if (forecastLanes(lanes).length === 0) return null;
