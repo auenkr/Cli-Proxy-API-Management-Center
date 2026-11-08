@@ -12,7 +12,7 @@ const Icon = CONFIG_TAB_ICONS.network;
 type RoutingStrategy = VisualConfigValues['routingStrategy'];
 type DisableImageGeneration = VisualConfigValues['disableImageGeneration'];
 
-/** 02 网络配置：代理、重试、路由策略、图像生成开关与网络行为开关。 */
+/** Network settings: proxy, retries, routing, image generation, and transport behavior. */
 export function SectionNetwork({
   values,
   validationErrors,
@@ -34,6 +34,10 @@ export function SectionNetwork({
     {
       value: 'fill-first',
       label: t('config_management.visual.sections.network.strategy_fill_first'),
+    },
+    {
+      value: 'soonest-reset',
+      label: t('config_management.visual.sections.network.strategy_soonest_reset'),
     },
   ];
 

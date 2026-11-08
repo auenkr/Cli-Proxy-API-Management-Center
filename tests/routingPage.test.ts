@@ -250,3 +250,17 @@ describe('applying a routing plan', () => {
     expect(patch).not.toHaveBeenCalled();
   });
 });
+
+test('soonest-reset is preserved by routing API normalization and shown in policy choices', async () => {
+  await i18n.changeLanguage('en');
+  const board = buildRoutingBoard({ routing: { strategy: 'soonest-reset' } }, []);
+  expect(board.settings.strategy).toBe('soonest-reset');
+  const html = renderToStaticMarkup(
+    createElement(PolicyPanel, {
+      settings: board.settings,
+      onChange: () => {},
+    })
+  );
+  expect(html).toContain('Soonest reset');
+  expect(html).toContain('aria-checked="true"');
+});
