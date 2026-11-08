@@ -543,7 +543,19 @@ export interface AuthFileCooldownResetResponse {
   models: string[];
 }
 
+export type WindowRefreshSetting = { enabled: boolean; anchor?: string };
+
 export const authFilesApi = {
+  getWindowRefresh: async (name: string): Promise<WindowRefreshSetting> => {
+    const payload = await apiClient.get<{ accounts?: Record<string, WindowRefreshSetting> }>(
+      '/credentials/window-refresh'
+    );
+    return payload?.accounts?.[name] ?? { enabled: true };
+  },
+
+  putWindowRefresh: (name: string, setting: WindowRefreshSetting) =>
+    apiClient.put('/credentials/window-refresh', { name, ...setting }),
+
   list: async (lookup?: AuthFileLookup) =>
     normalizeAuthFilesResponse(
       await apiClient.get<AuthFilesResponse>(

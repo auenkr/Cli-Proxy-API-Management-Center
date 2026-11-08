@@ -21,6 +21,7 @@ import {
 import { MAX_CREDENTIAL_WEIGHT } from '@/utils/credentialWeight';
 import { AuthFileExcludedModelsField } from './AuthFileExcludedModelsField';
 import { AuthFilePolicyFields } from './AuthFilePolicyFields';
+import { AuthFileWindowRefresh } from './AuthFileWindowRefresh';
 import { credentialPolicyError, readCredentialPolicy } from '../credentialPolicy';
 import styles from './AuthFileDetailsSheet.module.scss';
 
@@ -331,6 +332,12 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
                     disabled={disableControls || editor.saving}
                     onChange={onChange}
                   />
+                  {(editor.providerKey === 'claude' || editor.providerKey === 'codex') && (
+                    <AuthFileWindowRefresh
+                      fileName={editor.fileName}
+                      disabled={disableControls || editor.saving}
+                    />
+                  )}
                   <Input
                     label={t('auth_files.note_label')}
                     value={editor.note}
