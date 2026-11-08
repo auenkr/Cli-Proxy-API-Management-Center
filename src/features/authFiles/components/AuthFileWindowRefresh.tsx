@@ -9,38 +9,27 @@ import styles from './AuthFileWindowRefresh.module.scss';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-// RFC3339 -> date and time values for native inputs in the browser's local zone.
-const toLocalDate = (iso?: string): string => {
-  const date = iso ? new Date(iso) : null;
-  if (!date || Number.isNaN(date.getTime())) return '';
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-};
-
+// RFC3339 -> value for <input type="time"> in the browser's local zone.
 const toLocalTime = (iso?: string): string => {
   const date = iso ? new Date(iso) : null;
   if (!date || Number.isNaN(date.getTime())) return '';
   return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
 };
 
-// Interpret the selected date and time in the user's local zone and persist its UTC instant.
-const localDateTimeToUtc = (day: string, time: string): string => {
-  const dayMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(day);
-  const timeMatch = /^(\d{2}):(\d{2})$/.exec(time);
-  if (!dayMatch || !timeMatch) return '';
+// A time-only input has no date or timezone. Use the next occurrence in the user's
+// local timezone, then send its UTC instant so the server timezone cannot shift it.
+const localTimeToUtc = (value: string): string => {
+  const match = /^(\d{2}):(\d{2})$/.exec(value);
+  if (!match) return '';
+  const now = new Date();
   const date = new Date(
-    Number(dayMatch[1]),
-    Number(dayMatch[2]) - 1,
-    Number(dayMatch[3]),
-    Number(timeMatch[1]),
-    Number(timeMatch[2]),
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    Number(match[1]),
+    Number(match[2]),
   );
-  if (
-    date.getFullYear() !== Number(dayMatch[1]) ||
-    date.getMonth() !== Number(dayMatch[2]) - 1 ||
-    date.getDate() !== Number(dayMatch[3])
-  ) {
-    return '';
-  }
+  if (date.getTime() <= now.getTime()) date.setDate(date.getDate() + 1);
   return date.toISOString();
 };
 
@@ -54,7 +43,6 @@ export function AuthFileWindowRefresh({
   const { t } = useTranslation();
   const showNotification = useNotificationStore((state) => state.showNotification);
   const [enabled, setEnabled] = useState(true);
-  const [anchorDate, setAnchorDate] = useState('');
   const [anchor, setAnchor] = useState('');
   const [loaded, setLoaded] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -67,7 +55,6 @@ export function AuthFileWindowRefresh({
       .then((setting) => {
         if (cancelled) return;
         setEnabled(setting.enabled);
-        setAnchorDate(toLocalDate(setting.anchor));
         setAnchor(toLocalTime(setting.anchor));
         setLoaded(true);
       })
@@ -82,7 +69,7 @@ export function AuthFileWindowRefresh({
     try {
       await authFilesApi.putWindowRefresh(fileName, {
         enabled,
-        anchor: localDateTimeToUtc(anchorDate, anchor),
+        anchor: localTimeToUtc(anchor),
       });
       showNotification(t('auth_files.window_refresh_saved'), 'success');
     } catch {
@@ -102,28 +89,15 @@ export function AuthFileWindowRefresh({
         disabled={busy}
         ariaLabel={t('auth_files.window_refresh_label')}
       />
-      <div className="form-group">
-        <label>{t('auth_files.window_refresh_anchor')}</label>
-        <div className={styles.pickerGrid}>
-          <Input
-            label={t('auth_files.window_refresh_date')}
-            type="date"
-            value={anchorDate}
-            disabled={busy || !enabled}
-            className={styles.pickerInput}
-            onChange={(event) => setAnchorDate(event.target.value)}
-          />
-          <Input
-            label={t('auth_files.window_refresh_time')}
-            type="time"
-            value={anchor}
-            step={60}
-            disabled={busy || !enabled}
-            className={styles.pickerInput}
-            onChange={(event) => setAnchor(event.target.value)}
-          />
-        </div>
-      </div>
+      <Input
+        label={t('auth_files.window_refresh_anchor')}
+        type="time"
+        step={60}
+        className={styles.timeInput}
+        value={anchor}
+        disabled={busy || !enabled}
+        onChange={(event) => setAnchor(event.target.value)}
+      />
       <div className="hint">{t('auth_files.window_refresh_hint')}</div>
       <Button variant="secondary" disabled={busy} onClick={() => void save()}>
         {t('common.save')}

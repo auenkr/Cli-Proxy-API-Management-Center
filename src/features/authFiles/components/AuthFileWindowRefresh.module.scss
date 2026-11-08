@@ -1,26 +1,8 @@
-.pickerGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: 12px;
-
-  :global(.form-group) {
-    min-width: 0;
-    margin-bottom: 0;
-  }
-}
-
-.pickerInput {
+.timeInput {
   min-height: 48px;
   color-scheme: light;
 }
 
-:global([data-theme='dark']) .pickerInput {
+:global([data-theme='dark']) .timeInput {
   color-scheme: dark;
-}
-
-@media (max-width: 480px) {
-  .pickerGrid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
-  }
 }
