@@ -8,11 +8,28 @@ import { useNotificationStore } from '@/stores';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-// RFC3339 -> value for <input type="datetime-local"> in the browser's local zone.
-const toLocalInput = (iso?: string): string => {
+// RFC3339 -> value for <input type="time"> in the browser's local zone.
+const toLocalTime = (iso?: string): string => {
   const date = iso ? new Date(iso) : null;
   if (!date || Number.isNaN(date.getTime())) return '';
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
+
+// A time-only input has no date or timezone. Use the next occurrence in the user's
+// local timezone, then send its UTC instant so the server timezone cannot shift it.
+const localTimeToUtc = (value: string): string => {
+  const match = /^(\d{2}):(\d{2})$/.exec(value);
+  if (!match) return '';
+  const now = new Date();
+  const date = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    Number(match[1]),
+    Number(match[2]),
+  );
+  if (date.getTime() <= now.getTime()) date.setDate(date.getDate() + 1);
+  return date.toISOString();
 };
 
 export function AuthFileWindowRefresh({
@@ -37,7 +54,7 @@ export function AuthFileWindowRefresh({
       .then((setting) => {
         if (cancelled) return;
         setEnabled(setting.enabled);
-        setAnchor(toLocalInput(setting.anchor));
+        setAnchor(toLocalTime(setting.anchor));
         setLoaded(true);
       })
       .catch(() => undefined);
@@ -49,10 +66,9 @@ export function AuthFileWindowRefresh({
   const save = async () => {
     setSaving(true);
     try {
-      const date = anchor ? new Date(anchor) : null;
       await authFilesApi.putWindowRefresh(fileName, {
         enabled,
-        anchor: date ? date.toISOString() : '',
+        anchor: localTimeToUtc(anchor),
       });
       showNotification(t('auth_files.window_refresh_saved'), 'success');
     } catch {
@@ -74,7 +90,7 @@ export function AuthFileWindowRefresh({
       />
       <Input
         label={t('auth_files.window_refresh_anchor')}
-        type="datetime-local"
+        type="time"
         value={anchor}
         disabled={busy || !enabled}
         onChange={(event) => setAnchor(event.target.value)}
