@@ -1,0 +1,462 @@
+/* ============================================================
+ * Routing timeline: account usage on top, an ordered plan below.
+ * ============================================================ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(26px, 3.2vw, 30px);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  max-width: 64ch;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------- provider tabs ---------- */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--dur-hover) var(--ease-out-strong);
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}
+
+.tabActive {
+  color: var(--text-primary);
+  border-bottom-color: var(--primary-color);
+}
+
+.tabCount {
+  min-width: 18px;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: var(--primary-color);
+  color: #fff;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+}
+
+/* ---------- sections ---------- */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  flex-wrap: wrap;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.summary {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.muted {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.error {
+  font-size: 12px;
+  color: var(--error-color, #dc2626);
+}
+
+/* ---------- account cards ---------- */
+
+.accounts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.account {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-primary);
+  min-width: 0;
+}
+
+.accountHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.accountName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.usage {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.usageHead {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.usageValue {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.usageReset {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg-tertiary);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width var(--dur-hover) var(--ease-out-strong);
+}
+
+.barLow {
+  background: var(--viz-success, #16a34a);
+}
+
+.barMedium {
+  background: var(--amber-color, #d97706);
+}
+
+.barHigh {
+  background: var(--error-color, #dc2626);
+}
+
+/* ---------- pills ---------- */
+
+.pill {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.pillActive,
+.pill_active {
+  background: color-mix(in srgb, var(--viz-success, #16a34a) 16%, transparent);
+  color: var(--viz-success, #16a34a);
+}
+
+.pillHeld,
+.pill_limit {
+  background: color-mix(in srgb, var(--amber-color, #d97706) 16%, transparent);
+  color: var(--amber-color, #d97706);
+}
+
+.pill_upcoming {
+  background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+  color: var(--primary-color);
+}
+
+.pill_ended {
+  color: var(--text-tertiary);
+}
+
+/* ---------- visual track ---------- */
+
+.track {
+  display: flex;
+  height: 36px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.segment,
+.segmentNormal {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  font-weight: 600;
+  border-right: 1px solid var(--bg-primary);
+}
+
+.segment {
+  flex: none;
+  background: color-mix(in srgb, var(--primary-color) 22%, transparent);
+  color: var(--text-primary);
+}
+
+.seg_active {
+  background: color-mix(in srgb, var(--viz-success, #16a34a) 30%, transparent);
+}
+
+.seg_limit,
+.seg_ended {
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  text-decoration: line-through;
+}
+
+.segmentNormal {
+  flex: 1 0 auto;
+  min-width: 90px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.trackAxis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -6px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* ---------- block editor ---------- */
+
+.blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-primary);
+}
+
+.block_active {
+  border-color: var(--viz-success, #16a34a);
+}
+
+.block_ended,
+.block_limit {
+  opacity: 0.7;
+}
+
+.blockHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.blockIndex {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.blockWhen {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.blockTools {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 5px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background: var(--bg-secondary);
+  font: inherit;
+  font-size: 12px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-hover) var(--ease-out-strong),
+    background var(--dur-hover) var(--ease-out-strong);
+
+  &:hover:not(:disabled) {
+    border-color: var(--primary-color);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.chipOn {
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+}
+
+.chipMeta {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.dateInput,
+.limit input {
+  padding: 5px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12px;
+}
+
+.limits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.limit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+
+  input {
+    width: 64px;
+    text-align: right;
+  }
+}
+
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}

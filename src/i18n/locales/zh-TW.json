@@ -161,7 +161,8 @@
     "config_management": "設定面板",
     "logs": "記錄檢視",
     "system_info": "中心資訊",
-    "pricing": "Usage"
+    "pricing": "Usage",
+    "timeline": "路由时间线"
   },
   "nav_groups": {
     "operate": "運行",
@@ -183,7 +184,8 @@
     "logs": "請求追蹤與排查",
     "config_management": "閘道基礎設定",
     "system_info": "運行與診斷資訊",
-    "pricing": "API-equivalent cost by model and API key"
+    "pricing": "API-equivalent cost by model and API key",
+    "timeline": "按时间或用量安排账号"
   },
   "dashboard": {
     "hero_verdict_good": "運行平穩",
@@ -2528,5 +2530,49 @@
     "error": "綁定失敗，請重新開始。",
     "unsupported": "目前後端不支援 SIWC 綁定。",
     "expired": "綁定工作階段已過期，請重新開始。"
+  },
+  "timeline": {
+    "title": "路由时间线",
+    "subtitle": "选择某个提供商在一段时间内使用哪些账号。每个区块在到达结束时间或账号用量达到上限时结束（以先到者为准）。计划结束后恢复常规路由。",
+    "accounts_title": "当前账号",
+    "plan_title": "计划",
+    "routing_now": "正在路由",
+    "held": "已保留（达到上限）",
+    "weekly": "每周",
+    "use_next": "+ 加入计划",
+    "summary_active": "当前：{{accounts}}，直到 {{time}}",
+    "summary_normal": "当前：常规路由",
+    "normal": "常规路由",
+    "now": "现在",
+    "empty": "暂无计划。添加区块以选择接下来承接流量的账号。",
+    "add_block": "添加区块",
+    "after_plan": "最后一个区块结束后自动恢复常规路由。",
+    "use_accounts": "使用账号",
+    "ends_at": "结束于",
+    "or_when_usage": "或更早：用量达到",
+    "until_5h_reset": "直到 5h 重置",
+    "until_weekly_reset": "直到每周重置",
+    "ends_before_start": "该区块的结束时间早于开始时间，请选择更晚的时间。",
+    "off": "关闭",
+    "state_active": "进行中",
+    "state_upcoming": "下一个",
+    "state_limit": "已跳过：达到上限",
+    "state_ended": "已结束",
+    "move_up": "上移",
+    "move_down": "下移",
+    "remove": "删除区块",
+    "clear_all": "清空计划",
+    "discard": "放弃",
+    "save": "保存计划",
+    "saving": "保存中…",
+    "saved": "时间线已保存",
+    "save_failed": "保存时间线失败：{{message}}",
+    "load_failed": "加载时间线失败：{{message}}",
+    "no_accounts": "没有账号",
+    "no_accounts_hint": "添加 OAuth 凭证后即可安排路由。",
+    "unsaved_title": "时间线未保存",
+    "unsaved_message": "时间线的修改尚未保存，仍要离开吗？",
+    "unsaved_leave": "离开",
+    "unsaved_stay": "留下"
   }
 }

@@ -645,6 +645,12 @@ export function MainLayout() {
           metaKey: 'nav_meta.routing',
           icon: sidebarIcons.routing,
         },
+        {
+          path: '/routing/timeline',
+          labelKey: 'nav.timeline',
+          metaKey: 'nav_meta.timeline',
+          icon: sidebarIcons.quota,
+        },
         ...(isApiKeyFunConfigured ? [quickStartNavItem] : []),
       ],
     },

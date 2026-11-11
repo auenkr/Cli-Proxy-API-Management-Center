@@ -161,7 +161,8 @@
     "config_management": "Config Panel",
     "logs": "Logs Viewer",
     "system_info": "Management Center Info",
-    "pricing": "Usage"
+    "pricing": "Usage",
+    "timeline": "Timeline"
   },
   "nav_groups": {
     "operate": "Operate",
@@ -183,7 +184,8 @@
     "logs": "Request tracing",
     "config_management": "Gateway configuration",
     "system_info": "Runtime & diagnostics",
-    "pricing": "API-equivalent cost by model and API key"
+    "pricing": "API-equivalent cost by model and API key",
+    "timeline": "Plan accounts by time or usage"
   },
   "dashboard": {
     "hero_verdict_good": "All systems steady",
@@ -2502,5 +2504,49 @@
     "error": "Binding failed. Please start over.",
     "unsupported": "This backend does not support SIWC binding.",
     "expired": "The binding session expired. Please start over."
+  },
+  "timeline": {
+    "title": "Routing timeline",
+    "subtitle": "Pick which accounts serve a provider and for how long. Each block ends at its time or when an account reaches its usage limit, whichever comes first. When the plan ends, normal routing resumes.",
+    "accounts_title": "Accounts right now",
+    "plan_title": "Plan",
+    "routing_now": "Routing now",
+    "held": "Held (limit reached)",
+    "weekly": "Weekly",
+    "use_next": "+ Add to plan",
+    "summary_active": "Now: {{accounts}} until {{time}}",
+    "summary_normal": "Now: normal routing",
+    "normal": "Normal routing",
+    "now": "Now",
+    "empty": "No plan yet. Add a block to choose which accounts take traffic next.",
+    "add_block": "Add block",
+    "after_plan": "After the last block, normal routing takes over automatically.",
+    "use_accounts": "Use accounts",
+    "ends_at": "Ends at",
+    "or_when_usage": "Or earlier, when usage reaches",
+    "until_5h_reset": "Until 5h reset",
+    "until_weekly_reset": "Until weekly reset",
+    "ends_before_start": "This block ends before it starts. Pick a later time.",
+    "off": "off",
+    "state_active": "Active",
+    "state_upcoming": "Next",
+    "state_limit": "Skipped: limit reached",
+    "state_ended": "Ended",
+    "move_up": "Move up",
+    "move_down": "Move down",
+    "remove": "Remove block",
+    "clear_all": "Clear plan",
+    "discard": "Discard",
+    "save": "Save plan",
+    "saving": "Saving…",
+    "saved": "Timeline saved",
+    "save_failed": "Failed to save timeline: {{message}}",
+    "load_failed": "Failed to load timeline: {{message}}",
+    "no_accounts": "No accounts",
+    "no_accounts_hint": "Add an OAuth credential to plan its routing.",
+    "unsaved_title": "Unsaved timeline",
+    "unsaved_message": "Your timeline changes are not saved. Leave anyway?",
+    "unsaved_leave": "Leave",
+    "unsaved_stay": "Stay"
   }
 }
