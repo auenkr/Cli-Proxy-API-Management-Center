@@ -2529,7 +2529,7 @@
     "after_plan": "After the last block, normal routing takes over automatically.",
     "use_accounts": "Use accounts",
     "ends_at": "Ends at",
-    "or_when_usage": "Or earlier, when usage reaches",
+    "or_when_usage": "Or earlier, when remaining drops to",
     "until_5h_reset": "Until 5h reset",
     "until_weekly_reset": "Until weekly reset",
     "ends_before_start": "This block ends before it starts. Pick a later time.",
@@ -2553,6 +2553,8 @@
     "unsaved_title": "Unsaved timeline",
     "unsaved_message": "Your timeline changes are not saved. Leave anyway?",
     "unsaved_leave": "Leave",
-    "unsaved_stay": "Stay"
+    "unsaved_stay": "Stay",
+    "left": "{{value}}% left",
+    "disabled": "Disabled"
   }
 }

@@ -2549,7 +2549,7 @@
     "after_plan": "最后一个区块结束后自动恢复常规路由。",
     "use_accounts": "使用账号",
     "ends_at": "结束于",
-    "or_when_usage": "或更早：用量达到",
+    "or_when_usage": "或更早：剩余额度降到",
     "until_5h_reset": "直到 5h 重置",
     "until_weekly_reset": "直到每周重置",
     "ends_before_start": "该区块的结束时间早于开始时间，请选择更晚的时间。",
@@ -2573,6 +2573,8 @@
     "unsaved_title": "时间线未保存",
     "unsaved_message": "时间线的修改尚未保存，仍要离开吗？",
     "unsaved_leave": "离开",
-    "unsaved_stay": "留下"
+    "unsaved_stay": "留下",
+    "left": "剩余 {{value}}%",
+    "disabled": "已停用"
   }
 }

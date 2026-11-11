@@ -98,14 +98,18 @@ function UsageBar({
   reset?: string;
   now: number;
 }) {
+  const { t } = useTranslation();
   const known = used !== undefined;
-  const value = known ? Math.min(100, Math.max(0, used)) : 0;
-  const tone = value >= 85 ? styles.barHigh : value >= 60 ? styles.barMedium : styles.barLow;
+  // Show the remaining share, matching the Quota page.
+  const value = known ? 100 - Math.min(100, Math.max(0, used)) : 0;
+  const tone = value <= 15 ? styles.barHigh : value <= 40 ? styles.barMedium : styles.barLow;
   return (
     <div className={styles.usage}>
       <div className={styles.usageHead}>
         <span>{label}</span>
-        <span className={styles.usageValue}>{known ? `${Math.round(value)}%` : '—'}</span>
+        <span className={styles.usageValue}>
+          {known ? t('timeline.left', { value: Math.round(value) }) : '—'}
+        </span>
       </div>
       <div className={styles.bar}>
         <div className={`${styles.barFill} ${tone}`} style={{ width: `${value}%` }} />
@@ -162,13 +166,13 @@ export function TimelinePage() {
   );
 
   const providers = useMemo(() => {
-    const set = new Set((status?.accounts ?? []).filter((a) => !a.disabled).map((a) => a.provider));
+    const set = new Set((status?.accounts ?? []).map((a) => a.provider));
     return [...set].sort();
   }, [status]);
 
   const current = provider && providers.includes(provider) ? provider : (providers[0] ?? '');
   const providerAccounts = useMemo(
-    () => (status?.accounts ?? []).filter((a) => a.provider === current && !a.disabled),
+    () => (status?.accounts ?? []).filter((a) => a.provider === current),
     [status, current]
   );
   const blocks = draft.filter((block) => block.provider === current);
@@ -362,6 +366,7 @@ export function TimelinePage() {
                     {t('timeline.routing_now')}
                   </span>
                 )}
+                {account.disabled && <span className={styles.pill}>{t('timeline.disabled')}</span>}
                 {heldIds.has(account.id) && (
                   <span className={`${styles.pill} ${styles.pillHeld}`}>{t('timeline.held')}</span>
                 )}
@@ -493,7 +498,7 @@ export function TimelinePage() {
                           {account.name}
                           <span className={styles.chipMeta}>
                             {account.usage['5h'] !== undefined
-                              ? `${Math.round(account.usage['5h'])}%`
+                              ? t('timeline.left', { value: Math.round(100 - account.usage['5h']) })
                               : '—'}
                           </span>
                         </button>
@@ -548,19 +553,22 @@ export function TimelinePage() {
                       ] as const
                     ).map(([field, label]) => (
                       <label key={field} className={styles.limit}>
-                        <span>{label} ≥</span>
+                        <span>{label} ≤</span>
                         <input
                           type="number"
                           min={0}
                           max={100}
                           step={5}
                           placeholder={t('timeline.off')}
-                          value={block[field] || ''}
-                          onChange={(event) =>
-                            updateBlock(block.key, {
-                              [field]: Math.min(100, Math.max(0, Number(event.target.value) || 0)),
-                            })
-                          }
+                          // Edited as "% left"; stored as the used share the backend checks.
+                          value={block[field] ? 100 - block[field] : ''}
+                          onChange={(event) => {
+                            const left = Math.min(
+                              100,
+                              Math.max(0, Number(event.target.value) || 0)
+                            );
+                            updateBlock(block.key, { [field]: left > 0 ? 100 - left : 0 });
+                          }}
                         />
                         <span>%</span>
                       </label>
