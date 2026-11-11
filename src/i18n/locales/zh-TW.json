@@ -9,7 +9,8 @@
     "actions": "Actions",
     "left": "{{value}}% left",
     "low": "Low",
-    "resets_in": "Resets in {{value}}"
+    "resets_in": "Resets in {{value}}",
+    "disabled": "Disabled"
   },
   "quota_tokens": {
     "title": "權杖成本",
@@ -160,7 +161,7 @@
     "config_management": "設定面板",
     "logs": "記錄檢視",
     "system_info": "中心資訊",
-    "pricing": "Pricing"
+    "pricing": "Usage"
   },
   "nav_groups": {
     "operate": "運行",
@@ -182,7 +183,7 @@
     "logs": "請求追蹤與排查",
     "config_management": "閘道基礎設定",
     "system_info": "運行與診斷資訊",
-    "pricing": "API-equivalent cost"
+    "pricing": "API-equivalent cost by model and API key"
   },
   "dashboard": {
     "hero_verdict_good": "運行平穩",

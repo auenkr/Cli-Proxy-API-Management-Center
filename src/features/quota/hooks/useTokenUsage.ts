@@ -9,11 +9,7 @@
 import { useEffect, useState } from 'react';
 import { tokenUsageApi } from '@/services/api';
 import { useAuthStore } from '@/stores';
-import {
-  buildTokenUsageIndex,
-  EMPTY_TOKEN_USAGE_INDEX,
-  type TokenUsageIndex,
-} from '../tokenUsage';
+import { buildTokenUsageIndex, EMPTY_TOKEN_USAGE_INDEX, type TokenUsageIndex } from '../tokenUsage';
 
 const CACHE_TTL_MS = 15 * 1000;
 

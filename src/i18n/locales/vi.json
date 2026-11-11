@@ -9,7 +9,8 @@
     "actions": "Actions",
     "left": "{{value}}% left",
     "low": "Low",
-    "resets_in": "Resets in {{value}}"
+    "resets_in": "Resets in {{value}}",
+    "disabled": "Disabled"
   },
   "quota_tokens": {
     "title": "Chi phí token",
@@ -160,7 +161,7 @@
     "config_management": "Bảng cấu hình",
     "logs": "Trình xem Log",
     "system_info": "Thông tin Trung tâm Quản lý",
-    "pricing": "Pricing"
+    "pricing": "Usage"
   },
   "nav_groups": {
     "operate": "Vận hành",
@@ -182,7 +183,7 @@
     "logs": "Truy vết yêu cầu",
     "config_management": "Cấu hình gateway",
     "system_info": "Runtime & chẩn đoán",
-    "pricing": "API-equivalent cost"
+    "pricing": "API-equivalent cost by model and API key"
   },
   "dashboard": {
     "hero_verdict_good": "Mọi hệ thống ổn định",

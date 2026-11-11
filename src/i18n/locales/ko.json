@@ -9,7 +9,8 @@
     "actions": "Actions",
     "left": "{{value}}% left",
     "low": "Low",
-    "resets_in": "Resets in {{value}}"
+    "resets_in": "Resets in {{value}}",
+    "disabled": "Disabled"
   },
   "quota_tokens": {
     "title": "토큰 비용",
@@ -160,7 +161,7 @@
     "config_management": "설정 패널",
     "logs": "로그 뷰어",
     "system_info": "관리 센터 정보",
-    "pricing": "Pricing"
+    "pricing": "Usage"
   },
   "nav_groups": {
     "operate": "운영",
@@ -182,7 +183,7 @@
     "logs": "요청 추적",
     "config_management": "게이트웨이 설정",
     "system_info": "런타임 및 진단",
-    "pricing": "API-equivalent cost"
+    "pricing": "API-equivalent cost by model and API key"
   },
   "dashboard": {
     "hero_verdict_good": "모든 시스템 정상",

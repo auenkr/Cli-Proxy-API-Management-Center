@@ -9,7 +9,8 @@
     "actions": "Actions",
     "left": "{{value}}% left",
     "low": "Low",
-    "resets_in": "Resets in {{value}}"
+    "resets_in": "Resets in {{value}}",
+    "disabled": "Disabled"
   },
   "common": {
     "login": "Giriş",
@@ -124,7 +125,7 @@
     "config_management": "Yapılandırma Paneli",
     "logs": "Günlük Görüntüleyici",
     "system_info": "Yönetim Merkezi Bilgisi",
-    "pricing": "Fiyatlandırma"
+    "pricing": "Kullanım"
   },
   "nav_groups": {
     "operate": "İşlet",

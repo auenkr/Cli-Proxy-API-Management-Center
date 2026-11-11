@@ -9,7 +9,7 @@ import type { TFunction } from 'i18next';
 import { IconChevronDown, IconChevronUp, IconRefreshCw } from '@/components/ui/icons';
 import { useNow } from '@/hooks/useNow';
 import type { ResolvedTheme } from '@/types';
-import { resolveQuotaErrorMessage } from '@/utils/quota';
+import { isDisabledAuthFile, resolveQuotaErrorMessage } from '@/utils/quota';
 import { getQuotaCacheKey, getQuotaDisplayName } from '@/utils/quota/identity';
 import {
   getAuthFileIcon,
@@ -289,7 +289,12 @@ function LedgerRow(
         <div className={styles.credName} title={name}>
           {name}
         </div>
-        <div className={styles.credMeta}>{getTypeLabel(t, entry.type)}</div>
+        <div className={styles.credMeta}>
+          {getTypeLabel(t, entry.type)}
+          {isDisabledAuthFile(file) && (
+            <span className={styles.disabledTag}>{t('quota_ledger.disabled')}</span>
+          )}
+        </div>
       </td>
 
       {status === 'success' ? (

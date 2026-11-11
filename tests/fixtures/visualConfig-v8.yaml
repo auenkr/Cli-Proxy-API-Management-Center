@@ -15,12 +15,12 @@ access:
 api-keys:
   codex:
     - name: fixture-group
-      headers: {X-Fixture: upstream}
+      headers: { X-Fixture: upstream }
       keys:
         - api-key: fixture-upstream
           weight: 0
   claude:
-    - keys: [{api-key: fixture-claude}]
+    - keys: [{ api-key: fixture-claude }]
 routing:
   strategy: weighted-round-robin
   force-model-prefix: false
@@ -37,23 +37,23 @@ requests:
     bootstrap-retries: 0
   nonstream-keepalive-interval: 0
   payload:
-    future-section: {enabled: false}
+    future-section: { enabled: false }
     default:
       - models:
           - name: fixture-model
             future-model: keep
-        params: {temperature: 0}
+        params: { temperature: 0 }
         future-rule: keep
 oauth:
   auth-dir: ./fixture-auth
   auth-auto-refresh-workers: 0
   providers:
-    aistudio: {ws-auth: false}
+    aistudio: { ws-auth: false }
     codex:
-      header-defaults: {user-agent: fixture-oauth-agent}
+      header-defaults: { user-agent: fixture-oauth-agent }
       future-option: keep
     claude:
-      header-defaults: {stabilize-device-profile: false}
+      header-defaults: { stabilize-device-profile: false }
     antigravity:
       signature-cache-enabled: false
       signature-bypass-strict: false
@@ -76,5 +76,5 @@ observability:
 plugins:
   enabled: false
   configs:
-    fixture: {unknown: keep}
-future-root: {unknown: keep}
+    fixture: { unknown: keep }
+future-root: { unknown: keep }

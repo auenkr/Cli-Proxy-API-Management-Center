@@ -9,7 +9,8 @@
     "actions": "Actions",
     "left": "{{value}}% left",
     "low": "Low",
-    "resets_in": "Resets in {{value}}"
+    "resets_in": "Resets in {{value}}",
+    "disabled": "Disabled"
   },
   "quota_tokens": {
     "title": "Token cost",
@@ -160,7 +161,7 @@
     "config_management": "Config Panel",
     "logs": "Logs Viewer",
     "system_info": "Management Center Info",
-    "pricing": "Pricing"
+    "pricing": "Usage"
   },
   "nav_groups": {
     "operate": "Operate",
@@ -182,7 +183,7 @@
     "logs": "Request tracing",
     "config_management": "Gateway configuration",
     "system_info": "Runtime & diagnostics",
-    "pricing": "API-equivalent cost"
+    "pricing": "API-equivalent cost by model and API key"
   },
   "dashboard": {
     "hero_verdict_good": "All systems steady",

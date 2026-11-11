@@ -19,6 +19,8 @@ import { useTokenUsage } from '@/features/quota/hooks/useTokenUsage';
 import { hasTokenCostData } from '@/features/quota/tokenUsage';
 import { TokenCostDistribution } from '@/features/quota/components/TokenCostDistribution';
 import { maskEmails } from '@/features/quota/maskEmail';
+import { useClaudeResetGrants } from '@/features/quota/providers/claude/ClaudeResetGrants';
+import { ClaudeResetGrantDetails } from '@/features/quota/providers/claude/ClaudeResetGrantDetails';
 import styles from './AuthFileQuota.module.scss';
 
 /** Bind the auth-file host's compact styles to the quota rendering contract. */
@@ -215,6 +217,48 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
         {t('codex_quota.reset_button')}
       </Button>
     ) : undefined;
+  // Claude banked resets: same chip, expiry list and action as the quota page.
+  const claudeReset = useClaudeResetGrants(
+    file,
+    quotaType === 'claude' && quotaStatus !== 'idle',
+    !canRefreshQuota || quotaStatus === 'loading',
+    quota,
+    () => void refreshQuotaForFile(),
+    displayName
+  );
+  const showClaudeReset = quotaType === 'claude' && quotaStatus === 'success';
+  const claudePlanItems = showClaudeReset ? (
+    <span className={compactQuotaClasses.codexPlanItem}>
+      <span className={compactQuotaClasses.codexPlanLabel}>{t('claude_reset.remaining')}</span>
+      <span className={compactQuotaClasses.codexPlanValue}>{claudeReset.count ?? '--'}</span>
+    </span>
+  ) : undefined;
+  const claudeAfterPlan = showClaudeReset ? (
+    <>
+      <ClaudeResetGrantDetails grants={claudeReset.grants} classes={compactQuotaClasses} />
+      {claudeReset.message && (
+        <div role="status" className={compactQuotaClasses.codexResetCreditsError}>
+          {t(`claude_reset.${claudeReset.message}`)}
+        </div>
+      )}
+    </>
+  ) : undefined;
+  const claudeResetAction =
+    quotaType === 'claude' && quotaStatus !== 'idle' ? (
+      <Button
+        type="button"
+        variant="secondary"
+        size="sm"
+        className={styles.quotaResetCreditButton}
+        onClick={claudeReset.confirm}
+        disabled={claudeReset.blocked}
+        loading={claudeReset.busy}
+        title={t(`claude_reset.${claudeReset.buttonLabel}`)}
+      >
+        {!claudeReset.busy && <IconRefreshCw size={14} />}
+        {t(`claude_reset.${claudeReset.buttonLabel}`)}
+      </Button>
+    ) : undefined;
   const quotaErrorMessage = resolveQuotaErrorMessage(
     t,
     quota?.errorStatus,
@@ -241,13 +285,26 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
           })}
         </div>
       ) : quota && !retainedClaudeUsage ? (
-        <adapter.Body quota={quota} classes={compactQuotaClasses} />
+        <adapter.Body
+          quota={quota}
+          classes={compactQuotaClasses}
+          planItems={claudePlanItems}
+          afterPlan={claudeAfterPlan}
+        />
       ) : !retainedClaudeUsage ? (
         <div className={styles.quotaMessage}>{t(`${adapter.i18nPrefix}.idle`)}</div>
       ) : null}
-      {retainedClaudeUsage && quota && <adapter.Body quota={quota} classes={compactQuotaClasses} />}
-      {(showRefreshQuotaAction || resetQuotaAction) && (
+      {retainedClaudeUsage && quota && (
+        <adapter.Body
+          quota={quota}
+          classes={compactQuotaClasses}
+          planItems={claudePlanItems}
+          afterPlan={claudeAfterPlan}
+        />
+      )}
+      {(showRefreshQuotaAction || resetQuotaAction || claudeResetAction) && (
         <div className={styles.quotaCardActions}>
+          {claudeResetAction}
           {resetQuotaAction}
           {showRefreshQuotaAction && (
             <Button

@@ -9,7 +9,8 @@
     "actions": "Actions",
     "left": "{{value}}% left",
     "low": "Low",
-    "resets_in": "Resets in {{value}}"
+    "resets_in": "Resets in {{value}}",
+    "disabled": "Disabled"
   },
   "quota_tokens": {
     "title": "Стоимость токенов",
@@ -160,7 +161,7 @@
     "config_management": "Панель конфигурации",
     "logs": "Просмотр логов",
     "system_info": "Информация системы",
-    "pricing": "Pricing"
+    "pricing": "Usage"
   },
   "nav_groups": {
     "operate": "Работа",
@@ -181,7 +182,7 @@
     "logs": "Трассировка запросов",
     "config_management": "Базовая конфигурация шлюза",
     "system_info": "Состояние и диагностика",
-    "pricing": "API-equivalent cost"
+    "pricing": "API-equivalent cost by model and API key"
   },
   "dashboard": {
     "hero_verdict_good": "Всё стабильно",

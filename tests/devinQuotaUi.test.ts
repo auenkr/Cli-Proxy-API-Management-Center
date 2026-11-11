@@ -54,9 +54,13 @@ describe('Devin quota UI integration', () => {
     expect(DEVIN_CONFIG.filterFn({ ...file, disabled: 'true' } as unknown as AuthFileItem)).toBe(
       false
     );
-    const entries = classifyQuotaFiles([file, { ...file, name: 'disabled.json', disabled: true }]);
-    expect(entries).toEqual([{ file, type: 'devin' }]);
-    expect(buildTabCounts(entries).devin).toBe(1);
+    const disabled = { ...file, name: 'disabled.json', disabled: true };
+    const entries = classifyQuotaFiles([file, disabled]);
+    expect(entries).toEqual([
+      { file, type: 'devin' },
+      { file: disabled, type: 'devin' },
+    ]);
+    expect(buildTabCounts(entries).devin).toBe(2);
   });
 
   test('renders both remaining meters, independent resets and plan without observation time', () => {

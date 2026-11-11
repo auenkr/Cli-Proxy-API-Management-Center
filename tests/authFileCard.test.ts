@@ -30,7 +30,9 @@ describe('auth file card presentation contract', () => {
     expect(source.match(/<ToggleSwitch/g)).toHaveLength(2);
     expect(footer.match(/<ToggleSwitch/g)).toHaveLength(2);
     expect(header).not.toContain('<ToggleSwitch');
-    expect(header).toContain("ariaLabel={t('auth_files.card_select', { name: display(file.name) })}");
+    expect(header).toContain(
+      "ariaLabel={t('auth_files.card_select', { name: display(file.name) })}"
+    );
     expect(header).not.toContain('aria-label=');
     expect(footer).toContain('<ToggleSwitch');
     expect(footer).toContain("t('auth_files.card_toggle', { name: display(file.name) })");

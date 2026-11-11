@@ -48,7 +48,10 @@ export function normalizeTokenCostBreakdown(raw: unknown, requests: unknown): To
   const outputNonReasoning = toCount(output.non_reasoning_tokens);
   const outputReasoning = toCount(output.reasoning_tokens);
 
-  const inputTotal = Math.max(toCount(input.total_tokens), inputUncached + inputCacheRead + inputCacheWrite);
+  const inputTotal = Math.max(
+    toCount(input.total_tokens),
+    inputUncached + inputCacheRead + inputCacheWrite
+  );
   const outputTotal = Math.max(toCount(output.total_tokens), outputNonReasoning + outputReasoning);
   const total = Math.max(toCount(source.total_tokens), inputTotal + outputTotal);
 

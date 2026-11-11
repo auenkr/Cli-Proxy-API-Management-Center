@@ -52,11 +52,7 @@ describe('Kimi provider', () => {
     expect(buildCodexResponsesEndpoint(KIMI_OPENAI_BASE_URL)).toBe(
       'https://api.moonshot.ai/v1/responses'
     );
-    expect(getSponsorProviderDefinition('kimi').protocols).toEqual([
-      'openai',
-      'claude',
-      'codex',
-    ]);
+    expect(getSponsorProviderDefinition('kimi').protocols).toEqual(['openai', 'claude', 'codex']);
   });
 
   test('offers overseas and domestic URLs and maps the domestic protocol endpoints', () => {

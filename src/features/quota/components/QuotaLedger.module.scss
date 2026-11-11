@@ -222,3 +222,12 @@
     transform: rotate(360deg);
   }
 }
+
+.disabledTag {
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 11px;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}

@@ -1,8 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import {
-  getSidebarShortcutLabel,
-  isSidebarToggleShortcut,
-} from '@/utils/sidebarShortcut';
+import { getSidebarShortcutLabel, isSidebarToggleShortcut } from '@/utils/sidebarShortcut';
 
 describe('Sidebar Shortcut Logic', () => {
   describe('isSidebarToggleShortcut', () => {

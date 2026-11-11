@@ -73,9 +73,13 @@ describe('Muse quota UI integration', () => {
     expect(QUOTA_PROVIDER_TYPES.has('meta')).toBe(true);
     expect(META_CONFIG.filterFn(file)).toBe(true);
     expect(META_CONFIG.filterFn({ ...file, disabled: true })).toBe(false);
-    const entries = classifyQuotaFiles([file, { ...file, name: 'disabled.json', disabled: true }]);
-    expect(entries).toEqual([{ file, type: 'meta' }]);
-    expect(buildTabCounts(entries).meta).toBe(1);
+    const disabled = { ...file, name: 'disabled.json', disabled: true };
+    const entries = classifyQuotaFiles([file, disabled]);
+    expect(entries).toEqual([
+      { file, type: 'meta' },
+      { file: disabled, type: 'meta' },
+    ]);
+    expect(buildTabCounts(entries).meta).toBe(2);
   });
 
   test('converts used percent into remaining meters and displays plan and windows', () => {

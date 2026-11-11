@@ -4,6 +4,7 @@
  */
 
 import type { AuthFileItem } from '@/types';
+import { isDisabledAuthFile } from '@/utils/quota';
 import { ANTIGRAVITY_CONFIG } from './providers/antigravity/data';
 import { CLAUDE_CONFIG } from './providers/claude/data';
 import { CODEX_CONFIG } from './providers/codex/data';
@@ -44,14 +45,18 @@ export function canRefreshQuotaAfterList(
   );
 }
 
-export const resolveQuotaProviderType = (file: AuthFileItem): QuotaProviderType | null =>
-  PLUGIN_CONFIG.filterFn(file)
+export const resolveQuotaProviderType = (file: AuthFileItem): QuotaProviderType | null => {
+  // The quota page lists disabled credentials too; probe the provider filters
+  // as if enabled so they still classify.
+  const probe = isDisabledAuthFile(file) ? { ...file, disabled: false } : file;
+  return PLUGIN_CONFIG.filterFn(probe)
     ? 'plugin'
-    : (QUOTA_TAB_ORDER.find((type) => QUOTA_FILTER_MAP[type](file)) ?? null);
+    : (QUOTA_TAB_ORDER.find((type) => QUOTA_FILTER_MAP[type](probe)) ?? null);
+};
 
 /**
- * 把文件列表归类为额度条目：不支持额度或已停用的文件被过滤，
- * 结果按 QUOTA_TAB_ORDER 分组排列（'全部' tab 的卡片顺序即由此决定）。
+ * Classify files into quota entries: unsupported files are dropped (disabled ones are kept);
+ * results are grouped in QUOTA_TAB_ORDER (this is the 'all' tab order).
  */
 export function classifyQuotaFiles(files: AuthFileItem[]): QuotaFileEntry[] {
   const groups = new Map<QuotaProviderType, QuotaFileEntry[]>(

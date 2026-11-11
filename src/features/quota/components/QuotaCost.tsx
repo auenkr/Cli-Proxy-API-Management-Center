@@ -42,7 +42,8 @@ export function QuotaCost() {
   }, [load]);
 
   const providers = useMemo(() => report?.providers.map((p) => p.provider) ?? [], [report]);
-  const color = (provider: string) => PALETTE[Math.max(0, providers.indexOf(provider)) % PALETTE.length];
+  const color = (provider: string) =>
+    PALETTE[Math.max(0, providers.indexOf(provider)) % PALETTE.length];
 
   const series = useMemo(() => {
     if (!report) return null;
@@ -70,7 +71,8 @@ export function QuotaCost() {
     return { start, end, bucketMs, max, paths: grouped.map(path) };
   }, [report, providers, days]);
 
-  if (!report) return failed ? <section className={styles.panel}>{t('quota_cost.empty')}</section> : null;
+  if (!report)
+    return failed ? <section className={styles.panel}>{t('quota_cost.empty')}</section> : null;
   if (report.requests === 0) {
     return (
       <section className={styles.panel}>
@@ -82,7 +84,9 @@ export function QuotaCost() {
               className={`${styles.rangeBtn} ${days === range ? styles.rangeActive : ''}`.trim()}
               onClick={() => setDays(range)}
             >
-              {range === 1 ? t('quota_cost.range_24h') : t('quota_cost.range_days', { count: range })}
+              {range === 1
+                ? t('quota_cost.range_24h')
+                : t('quota_cost.range_days', { count: range })}
             </button>
           ))}
         </div>
@@ -94,9 +98,24 @@ export function QuotaCost() {
   const costs = report.costs;
   const typeRows = [
     { key: 'input', label: t('quota_tokens.input'), value: costs.input, tone: styles.toneInput },
-    { key: 'cache_read', label: t('quota_tokens.cache_read'), value: costs.cache_read, tone: styles.toneCacheRead },
-    { key: 'cache_write', label: t('quota_tokens.cache_write'), value: costs.cache_write, tone: styles.toneCacheWrite },
-    { key: 'output', label: t('quota_tokens.output'), value: costs.output, tone: styles.toneOutput },
+    {
+      key: 'cache_read',
+      label: t('quota_tokens.cache_read'),
+      value: costs.cache_read,
+      tone: styles.toneCacheRead,
+    },
+    {
+      key: 'cache_write',
+      label: t('quota_tokens.cache_write'),
+      value: costs.cache_write,
+      tone: styles.toneCacheWrite,
+    },
+    {
+      key: 'output',
+      label: t('quota_tokens.output'),
+      value: costs.output,
+      tone: styles.toneOutput,
+    },
   ].filter((row) => row.value > 0);
 
   const totalTokens =
@@ -109,7 +128,8 @@ export function QuotaCost() {
   const hourRows = [...report.hourly].reverse();
   const fmtHour = (ms: number) =>
     new Date(ms).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric' });
-  const fmtDay = (ms: number) => new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  const fmtDay = (ms: number) =>
+    new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 
   return (
     <section className={styles.panel}>
@@ -128,7 +148,9 @@ export function QuotaCost() {
               className={`${styles.rangeBtn} ${days === range ? styles.rangeActive : ''}`.trim()}
               onClick={() => setDays(range)}
             >
-              {range === 1 ? t('quota_cost.range_24h') : t('quota_cost.range_days', { count: range })}
+              {range === 1
+                ? t('quota_cost.range_24h')
+                : t('quota_cost.range_days', { count: range })}
             </button>
           ))}
         </div>
@@ -138,13 +160,21 @@ export function QuotaCost() {
         <ul className={styles.providerList}>
           {report.providers.map((p) => (
             <li key={p.provider} className={styles.providerItem}>
-              <span className={styles.dot} style={{ background: color(p.provider) }} aria-hidden="true" />
+              <span
+                className={styles.dot}
+                style={{ background: color(p.provider) }}
+                aria-hidden="true"
+              />
               <span className={styles.providerName}>{p.provider}</span>
               <span className={styles.providerCost}>{usd(p.costs.total)}</span>
               <span className={styles.providerMeta}>
                 {costs.total > 0 ? ((p.costs.total / costs.total) * 100).toFixed(1) : '0.0'}% ·{' '}
                 {formatCompactNumber(
-                  p.tokens.input + p.tokens.cache_read + p.tokens.cache_write + p.tokens.output + p.tokens.reasoning
+                  p.tokens.input +
+                    p.tokens.cache_read +
+                    p.tokens.cache_write +
+                    p.tokens.output +
+                    p.tokens.reasoning
                 )}{' '}
                 {t('quota_cost.tokens')}
               </span>
@@ -158,12 +188,31 @@ export function QuotaCost() {
               {days > 7 ? t('quota_cost.daily_cost') : t('quota_cost.hourly_cost')}
               <span className={styles.chartMax}>{usd(series.max)}</span>
             </div>
-            <svg viewBox={`0 0 ${CHART_W} ${CHART_H}`} className={styles.svg} preserveAspectRatio="none" role="img">
+            <svg
+              viewBox={`0 0 ${CHART_W} ${CHART_H}`}
+              className={styles.svg}
+              preserveAspectRatio="none"
+              role="img"
+            >
               {[0.25, 0.5, 0.75].map((f) => (
-                <line key={f} x1="0" x2={CHART_W} y1={CHART_H * f} y2={CHART_H * f} className={styles.grid} />
+                <line
+                  key={f}
+                  x1="0"
+                  x2={CHART_W}
+                  y1={CHART_H * f}
+                  y2={CHART_H * f}
+                  className={styles.grid}
+                />
               ))}
               {series.paths.map((d, i) => (
-                <path key={providers[i]} d={d} fill="none" stroke={color(providers[i])} strokeWidth="1.8" vectorEffect="non-scaling-stroke" />
+                <path
+                  key={providers[i]}
+                  d={d}
+                  fill="none"
+                  stroke={color(providers[i])}
+                  strokeWidth="1.8"
+                  vectorEffect="non-scaling-stroke"
+                />
               ))}
             </svg>
             <div className={styles.axis}>
@@ -201,7 +250,11 @@ export function QuotaCost() {
         <div className={styles.blockTitle}>{t('quota_cost.cost_by_type')}</div>
         <div className={styles.bar}>
           {typeRows.map((row) => (
-            <span key={row.key} className={`${styles.segment} ${row.tone}`} style={{ width: `${(row.value / costs.total) * 100}%` }} />
+            <span
+              key={row.key}
+              className={`${styles.segment} ${row.tone}`}
+              style={{ width: `${(row.value / costs.total) * 100}%` }}
+            />
           ))}
         </div>
         <ul className={styles.legend}>
@@ -233,7 +286,13 @@ export function QuotaCost() {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>{view === 'model' ? t('quota_cost.model') : view === 'key' ? t('quota_cost.api_key') : t('quota_cost.hour')}</th>
+            <th>
+              {view === 'model'
+                ? t('quota_cost.model')
+                : view === 'key'
+                  ? t('quota_cost.api_key')
+                  : t('quota_cost.hour')}
+            </th>
             <th>{t('quota_cost.cost')}</th>
             <th>{t('quota_cost.share')}</th>
             <th>{t('quota_cost.tokens')}</th>
@@ -244,14 +303,22 @@ export function QuotaCost() {
             ? report.models.map((row) => (
                 <tr key={`${row.provider}/${row.model}`}>
                   <td>
-                    <span className={styles.dot} style={{ background: color(row.provider) }} aria-hidden="true" />
+                    <span
+                      className={styles.dot}
+                      style={{ background: color(row.provider) }}
+                      aria-hidden="true"
+                    />
                     {row.model}
                   </td>
                   <td>{row.priced ? usd(row.costs.total) : t('quota_cost.unpriced')}</td>
                   <td>{row.priced ? `${(row.share * 100).toFixed(1)}%` : '—'}</td>
                   <td>
                     {formatCompactNumber(
-                      row.tokens.input + row.tokens.cache_read + row.tokens.cache_write + row.tokens.output + row.tokens.reasoning
+                      row.tokens.input +
+                        row.tokens.cache_read +
+                        row.tokens.cache_write +
+                        row.tokens.output +
+                        row.tokens.reasoning
                     )}
                   </td>
                 </tr>
@@ -269,19 +336,25 @@ export function QuotaCost() {
                     <td>{`${(row.share * 100).toFixed(1)}%`}</td>
                     <td>
                       {formatCompactNumber(
-                        row.tokens.input + row.tokens.cache_read + row.tokens.cache_write + row.tokens.output + row.tokens.reasoning
+                        row.tokens.input +
+                          row.tokens.cache_read +
+                          row.tokens.cache_write +
+                          row.tokens.output +
+                          row.tokens.reasoning
                       )}
                     </td>
                   </tr>
                 ))
               : hourRows.slice(0, 72).map((row) => (
-                <tr key={row.hour}>
-                  <td>{fmtHour(row.hour)}</td>
-                  <td>{usd(row.total)}</td>
-                  <td>{costs.total > 0 ? `${((row.total / costs.total) * 100).toFixed(1)}%` : '—'}</td>
-                  <td>—</td>
-                </tr>
-              ))}
+                  <tr key={row.hour}>
+                    <td>{fmtHour(row.hour)}</td>
+                    <td>{usd(row.total)}</td>
+                    <td>
+                      {costs.total > 0 ? `${((row.total / costs.total) * 100).toFixed(1)}%` : '—'}
+                    </td>
+                    <td>—</td>
+                  </tr>
+                ))}
         </tbody>
       </table>
       {report.unpriced_tokens > 0 && (
