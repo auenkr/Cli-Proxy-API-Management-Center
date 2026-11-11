@@ -24,7 +24,7 @@ export function QuotaCost() {
   const [days, setDays] = useState<number>(7);
   const [report, setReport] = useState<UsageCostReport | null>(null);
   const [failed, setFailed] = useState(false);
-  const [view, setView] = useState<'model' | 'hour'>('model');
+  const [view, setView] = useState<'model' | 'key' | 'hour'>('model');
 
   const load = useCallback(async () => {
     try {
@@ -217,7 +217,7 @@ export function QuotaCost() {
       <div className={styles.breakdownHead}>
         <div className={styles.blockTitle}>{t('quota_cost.breakdown')}</div>
         <div className={styles.ranges} role="group">
-          {(['model', 'hour'] as const).map((mode) => (
+          {(['model', 'key', 'hour'] as const).map((mode) => (
             <button
               key={mode}
               type="button"
@@ -233,7 +233,7 @@ export function QuotaCost() {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>{view === 'model' ? t('quota_cost.model') : t('quota_cost.hour')}</th>
+            <th>{view === 'model' ? t('quota_cost.model') : view === 'key' ? t('quota_cost.api_key') : t('quota_cost.hour')}</th>
             <th>{t('quota_cost.cost')}</th>
             <th>{t('quota_cost.share')}</th>
             <th>{t('quota_cost.tokens')}</th>
@@ -256,7 +256,25 @@ export function QuotaCost() {
                   </td>
                 </tr>
               ))
-            : hourRows.slice(0, 72).map((row) => (
+            : view === 'key'
+              ? (report.api_keys ?? []).map((row) => (
+                  <tr key={row.fingerprint || '-'}>
+                    <td>
+                      {row.name ||
+                        (row.fingerprint
+                          ? t('quota_cost.unnamed_key', { id: row.fingerprint })
+                          : t('quota_cost.no_key'))}
+                    </td>
+                    <td>{usd(row.costs.total)}</td>
+                    <td>{`${(row.share * 100).toFixed(1)}%`}</td>
+                    <td>
+                      {formatCompactNumber(
+                        row.tokens.input + row.tokens.cache_read + row.tokens.cache_write + row.tokens.output + row.tokens.reasoning
+                      )}
+                    </td>
+                  </tr>
+                ))
+              : hourRows.slice(0, 72).map((row) => (
                 <tr key={row.hour}>
                   <td>{fmtHour(row.hour)}</td>
                   <td>{usd(row.total)}</td>

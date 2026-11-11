@@ -1,4 +1,16 @@
 {
+  "quota_ledger": {
+    "of_pool": "of {{capacity}}% pool",
+    "next_reset": "Next reset +{{gain}}% · {{when}}",
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "credential": "Credential",
+    "resets": "Resets",
+    "actions": "Actions",
+    "left": "{{value}}% left",
+    "low": "Low",
+    "resets_in": "Resets in {{value}}"
+  },
   "common": {
     "login": "Giriş",
     "logout": "Çıkış",
@@ -2458,6 +2470,10 @@
     "breakdown": "Döküm",
     "by_hour": "Saat",
     "by_model": "Model",
+    "by_key": "API key",
+    "api_key": "API key",
+    "unnamed_key": "Unnamed key ({{id}})",
+    "no_key": "No API key / earlier records",
     "cache_savings": "Önbellek tasarrufu",
     "cached_input": "Önbellekten girdi",
     "cost": "Maliyet",

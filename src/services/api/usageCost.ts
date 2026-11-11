@@ -42,6 +42,15 @@ export interface UsageCostReport {
     tokens: UsageCostTokens;
     costs: UsageCostCosts;
   }>;
+  /** Per client API key; only the configured name and a short fingerprint are exposed. */
+  api_keys?: Array<{
+    name: string;
+    fingerprint: string;
+    requests: number;
+    tokens: UsageCostTokens;
+    costs: UsageCostCosts;
+    share: number;
+  }>;
 }
 
 export const usageCostApi = {

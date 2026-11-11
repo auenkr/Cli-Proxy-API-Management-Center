@@ -1,4 +1,16 @@
 {
+  "quota_ledger": {
+    "of_pool": "of {{capacity}}% pool",
+    "next_reset": "Next reset +{{gain}}% · {{when}}",
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "credential": "Credential",
+    "resets": "Resets",
+    "actions": "Actions",
+    "left": "{{value}}% left",
+    "low": "Low",
+    "resets_in": "Resets in {{value}}"
+  },
   "quota_tokens": {
     "title": "Token cost",
     "input": "Input",
@@ -22,6 +34,10 @@
     "cost_by_type": "Cost by type",
     "breakdown": "Breakdown",
     "by_model": "Model",
+    "by_key": "API key",
+    "api_key": "API key",
+    "unnamed_key": "Unnamed key ({{id}})",
+    "no_key": "No API key / earlier records",
     "by_hour": "Hour",
     "model": "Model",
     "hour": "Hour",
