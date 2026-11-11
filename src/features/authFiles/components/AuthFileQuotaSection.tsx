@@ -1,4 +1,4 @@
-import { fetchQuotaCached } from '@/features/quota/quotaFetchCache';
+import { fetchQuota } from '@/features/quota/quotaFetch';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -87,9 +87,7 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
       }));
 
       try {
-        const data = (await fetchQuotaCached(adapter, file, t, force)) as Awaited<
-          ReturnType<typeof adapter.fetchQuota>
-        >;
+        const data = await fetchQuota(adapter, file, t, force);
         commitIfQuotaCacheCurrent(cacheGeneration, () => {
           updateQuotaState((prev) => ({
             ...prev,

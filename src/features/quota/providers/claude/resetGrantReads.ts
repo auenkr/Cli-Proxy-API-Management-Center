@@ -15,7 +15,7 @@ export function scheduleResetGrantRead(start: () => void, current: () => boolean
 export function createResetGrantReader(
   deps = {
     revision: () => apiClient.getConnectionRevision(),
-    read: readClaudeResetGrants,
+    read: (authIndex: string) => readClaudeResetGrants(authIndex, true),
   }
 ) {
   let session = deps.revision();

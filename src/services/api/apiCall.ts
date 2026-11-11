@@ -13,6 +13,8 @@ export interface ApiCallRequest {
   url: string;
   header?: Record<string, string>;
   data?: string;
+  /** Skip the backend 60s GET cache and always call upstream. */
+  no_cache?: boolean;
 }
 
 export interface ApiCallResult<T = unknown> {

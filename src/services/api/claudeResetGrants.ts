@@ -235,13 +235,18 @@ export function anthropicResetGrantBlocker(
   return null;
 }
 
-async function readAccount(authIndex: string, path: string): Promise<Record<string, unknown>> {
+async function readAccount(
+  authIndex: string,
+  path: string,
+  cached = false
+): Promise<Record<string, unknown>> {
   const response = await apiCallApi.request(
     {
       authIndex,
       method: 'GET',
       url: ANTHROPIC_API_ORIGIN + path,
       header: { ...CLAUDE_REQUEST_HEADERS },
+      no_cache: !cached,
     },
     { timeout: 12000 }
   );
@@ -254,8 +259,9 @@ async function readAccount(authIndex: string, path: string): Promise<Record<stri
   return response.body;
 }
 
-export async function readClaudeResetGrants(authIndex: string) {
-  const body = await readAccount(authIndex, ANTHROPIC_RESET_GRANT_STATUS_PATH);
+/** Fresh by default (spend preflight); card display reads pass `cached`. */
+export async function readClaudeResetGrants(authIndex: string, cached = false) {
+  const body = await readAccount(authIndex, ANTHROPIC_RESET_GRANT_STATUS_PATH, cached);
   const status = parseAnthropicResetGrantStatus(body.cedar_ember);
   if (!status) throw new AnthropicResetGrantError('malformed');
   return status;

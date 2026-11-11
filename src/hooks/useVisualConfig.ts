@@ -1259,11 +1259,17 @@ function getNextDirtyFields(
   ).forEach(updateScalarDirty);
 
   if (Object.prototype.hasOwnProperty.call(patch, 'apiKeyModels')) {
-    updateDirty('apiKeyModels', JSON.stringify(nextValues.apiKeyModels) === JSON.stringify(baselineValues.apiKeyModels));
+    updateDirty(
+      'apiKeyModels',
+      JSON.stringify(nextValues.apiKeyModels) === JSON.stringify(baselineValues.apiKeyModels)
+    );
   }
 
   if (Object.prototype.hasOwnProperty.call(patch, 'apiKeyNames')) {
-    updateDirty('apiKeyNames', JSON.stringify(nextValues.apiKeyNames) === JSON.stringify(baselineValues.apiKeyNames));
+    updateDirty(
+      'apiKeyNames',
+      JSON.stringify(nextValues.apiKeyNames) === JSON.stringify(baselineValues.apiKeyNames)
+    );
   }
 
   if (Object.prototype.hasOwnProperty.call(patch, 'pluginStoreSources')) {

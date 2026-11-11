@@ -338,7 +338,10 @@ function ScopedApiKeysCardEditor({
             {t('config_management.visual.api_keys.restrict_models')}
           </label>
           {restrictModels && (
-            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div
+              className="form-group"
+              style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
+            >
               <div className="hint">
                 {modelsLoading
                   ? t('system_info.models_loading')

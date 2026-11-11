@@ -15,7 +15,7 @@ import type { AuthFileItem } from '@/types';
 import { getStatusFromError } from '@/utils/quota';
 import { getQuotaCacheKey } from '@/utils/quota/identity';
 import { enrichQuotaInBackground } from '../quotaEnrichment';
-import { fetchQuotaCached } from '../quotaFetchCache';
+import { fetchQuota } from '@/features/quota/quotaFetch';
 import { getQuotaMap, getQuotaSetter, type QuotaAdapter, type QuotaCardState } from '../providers';
 
 const getQuotaState = (adapter: QuotaAdapter, file: AuthFileItem): QuotaCardState | undefined =>
@@ -45,9 +45,7 @@ export function useQuotaActions(
       }));
 
       try {
-        const data = (await fetchQuotaCached(adapter, file, t, true)) as Awaited<
-          ReturnType<typeof adapter.fetchQuota>
-        >;
+        const data = await fetchQuota(adapter, file, t, true);
         commitIfQuotaCacheCurrent(cacheGeneration, () => {
           const successState = adapter.buildSuccessState(data);
           setQuota((prev) => ({

@@ -8,7 +8,7 @@
  * 提交按 provider 分组进行 —— 快的提供商先落地，不等慢的。
  */
 
-import { fetchQuotaCached } from '../quotaFetchCache';
+import { fetchQuota } from '@/features/quota/quotaFetch';
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { captureQuotaCacheGeneration, commitIfQuotaCacheCurrent } from '@/stores';
@@ -70,9 +70,7 @@ export function useQuotaBatchLoader() {
               entries.map(async ({ file }): Promise<BatchFetchResult> => {
                 const cacheKey = getQuotaCacheKey(file);
                 try {
-                  const data = (await fetchQuotaCached(adapter, file, t, force)) as Awaited<
-                    ReturnType<typeof adapter.fetchQuota>
-                  >;
+                  const data = await fetchQuota(adapter, file, t, force);
                   return { name: file.name, cacheKey, status: 'success', data };
                 } catch (err: unknown) {
                   const message = err instanceof Error ? err.message : t('common.unknown_error');

@@ -462,12 +462,11 @@ export function resolveXaiSubscriptionPlan(
   const label = normalizeStringValue(display) ?? normalizeStringValue(tier);
   if (!label) return null;
   const key = `${display ?? ''} ${tier ?? ''}`.toLowerCase().replace(/[^a-z0-9]+/g, '');
-  const planTier =
-    key.includes('heavy')
-      ? 'elite'
-      : key.includes('supergrok') || key.includes('premium')
-        ? 'premium'
-        : 'standard';
+  const planTier = key.includes('heavy')
+    ? 'elite'
+    : key.includes('supergrok') || key.includes('premium')
+      ? 'premium'
+      : 'standard';
   return { label, tier: planTier };
 }
 

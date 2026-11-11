@@ -27,7 +27,7 @@ const localTimeToUtc = (value: string): string => {
     now.getMonth(),
     now.getDate(),
     Number(match[1]),
-    Number(match[2]),
+    Number(match[2])
   );
   if (date.getTime() <= now.getTime()) date.setDate(date.getDate() + 1);
   return date.toISOString();
