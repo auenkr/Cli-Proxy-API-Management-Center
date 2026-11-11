@@ -1,3 +1,4 @@
+import { fetchQuotaCached } from '@/features/quota/quotaFetchCache';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -72,57 +73,62 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
     (state) => state[adapter.storeSetter] as unknown as QuotaMapUpdater
   );
 
-  const refreshQuotaForFile = useCallback(async () => {
-    if (disableControls) return;
-    if (isRuntimeOnlyAuthFile(file)) return;
-    if (quota?.status === 'loading' || resettingQuota) return;
+  const refreshQuotaForFile = useCallback(
+    async (force = true) => {
+      if (disableControls) return;
+      if (isRuntimeOnlyAuthFile(file)) return;
+      if (quota?.status === 'loading' || resettingQuota) return;
 
-    const cacheGeneration = captureQuotaCacheGeneration(file.name);
+      const cacheGeneration = captureQuotaCacheGeneration(file.name);
 
-    updateQuotaState((prev) => ({
-      ...prev,
-      [cacheKey]: adapter.buildLoadingState(),
-    }));
+      updateQuotaState((prev) => ({
+        ...prev,
+        [cacheKey]: adapter.buildLoadingState(),
+      }));
 
-    try {
-      const data = await adapter.fetchQuota(file, t);
-      commitIfQuotaCacheCurrent(cacheGeneration, () => {
-        updateQuotaState((prev) => ({
-          ...prev,
-          [cacheKey]: adapter.buildSuccessState(data),
-        }));
-        showNotification(t('auth_files.quota_refresh_success', { name: displayName }), 'success');
-      });
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : t('common.unknown_error');
-      const status = getStatusFromError(err);
-      commitIfQuotaCacheCurrent(cacheGeneration, () => {
-        updateQuotaState((prev) => ({
-          ...prev,
-          [cacheKey]: adapter.buildErrorState(message, status),
-        }));
-        showNotification(
-          t('auth_files.quota_refresh_failed', {
-            name: displayName,
-            message: showEmails ? message : maskEmails(message),
-          }),
-          'error'
-        );
-      });
-    }
-  }, [
-    adapter,
-    cacheKey,
-    disableControls,
-    displayName,
-    file,
-    quota?.status,
-    resettingQuota,
-    showEmails,
-    showNotification,
-    t,
-    updateQuotaState,
-  ]);
+      try {
+        const data = (await fetchQuotaCached(adapter, file, t, force)) as Awaited<
+          ReturnType<typeof adapter.fetchQuota>
+        >;
+        commitIfQuotaCacheCurrent(cacheGeneration, () => {
+          updateQuotaState((prev) => ({
+            ...prev,
+            [cacheKey]: adapter.buildSuccessState(data),
+          }));
+          showNotification(t('auth_files.quota_refresh_success', { name: displayName }), 'success');
+        });
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : t('common.unknown_error');
+        const status = getStatusFromError(err);
+        commitIfQuotaCacheCurrent(cacheGeneration, () => {
+          updateQuotaState((prev) => ({
+            ...prev,
+            [cacheKey]: adapter.buildErrorState(message, status),
+          }));
+          showNotification(
+            t('auth_files.quota_refresh_failed', {
+              name: displayName,
+              message: showEmails ? message : maskEmails(message),
+            }),
+            'error'
+          );
+        });
+      }
+    },
+    [
+      adapter,
+      cacheKey,
+      disableControls,
+      displayName,
+      file,
+      quota?.status,
+      resettingQuota,
+      showEmails,
+      showNotification,
+      t,
+      updateQuotaState,
+    ]
+  );
 
   // Auto-load quota when this credential has no cached data yet, so the card
   // no longer sits on the idle "click to refresh" prompt. Runs once per mount.
@@ -132,7 +138,7 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
     if (quota?.status !== undefined && quota.status !== 'idle') return;
     if (disableControls || isRuntimeOnlyAuthFile(file)) return;
     quotaAutoLoadRef.current = true;
-    void refreshQuotaForFile();
+    void refreshQuotaForFile(false);
   }, [disableControls, file, quota?.status, refreshQuotaForFile]);
 
   const resetQuotaForFile = useCallback(() => {
