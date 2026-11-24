@@ -2506,6 +2506,9 @@
     "expired": "바인딩 세션이 만료되었습니다. 다시 시작하세요."
   },
   "timeline": {
+    "pause": "타임라인 일시 중지",
+    "resume": "타임라인 재개",
+    "paused_hint": "모든 제공업체의 타임라인이 일시 중지되었습니다. 요청에는 기본 라우팅이 적용됩니다.",
     "title": "Routing timeline",
     "subtitle": "연결된 계정의 사용 시간을 정하고 용량을 남길 수 있도록 할당량 하한을 설정하세요.",
     "accounts_title": "Accounts right now",

@@ -230,8 +230,16 @@ class ApiClient {
    * PATCH request
    */
   async patch<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.instance.patch<T>(url, data, config);
+    const response = await this.patchRaw<T>(url, data, config);
     return response.data;
+  }
+
+  async patchRaw<T = unknown>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
+    return this.instance.patch<T>(url, data, config);
   }
 
   /**

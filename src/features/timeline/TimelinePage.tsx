@@ -81,7 +81,8 @@ const overLimit = (account: TimelineAccount | undefined, block: TimelineBlock): 
 function blockStates(
   blocks: readonly DraftBlock[],
   accounts: Map<string, TimelineAccount>,
-  now: number
+  now: number,
+  paused: boolean
 ): BlockState[] {
   const live = blocks.filter((block) => Date.parse(block.until) > now);
   const held = new Set(
@@ -90,6 +91,7 @@ function blockStates(
   let claimed = false;
   return blocks.map((block) => {
     if (!(Date.parse(block.until) > now)) return 'ended';
+    if (paused) return 'upcoming';
     const usable = block.accounts.some((id) => !held.has(id));
     if (!usable) return 'limit';
     if (claimed) return 'upcoming';
@@ -134,6 +136,7 @@ export function TimelinePage() {
   const { t, i18n } = useTranslation();
   const showNotification = useNotificationStore((state) => state.showNotification);
   const [status, setStatus] = useState<TimelineStatus | null>(null);
+  const [paused, setPaused] = useState(false);
   const [saved, setSaved] = useState<DraftBlock[]>([]);
   const [draft, setDraft] = useState<DraftBlock[]>([]);
   const [provider, setProvider] = useState('');
@@ -174,6 +177,7 @@ export function TimelinePage() {
           loaded.current = true;
           etag.current = result.etag;
           setStatus(result.status);
+          setPaused(result.paused);
           setSaved(blocks);
           setDraft(blocks);
         }
@@ -243,7 +247,7 @@ export function TimelinePage() {
   const blocks = draft.filter(
     (block) => block.provider === current && !!block.weekly === (view === 'weekly')
   );
-  const states = view === 'once' ? blockStates(blocks, accountsById, now) : [];
+  const states = view === 'once' ? blockStates(blocks, accountsById, now, paused) : [];
   const visibleBlocks = blocks.filter(
     (block) => day === null || (block.weekly && coversWeekday(block.weekly, day))
   );
@@ -415,8 +419,29 @@ export function TimelinePage() {
     }
   };
 
-  const activeIds = new Set(status?.active[current] ?? []);
-  const heldIds = new Set(status?.protected ?? []);
+  const togglePaused = async () => {
+    const revision = apiClient.getConnectionRevision();
+    setSaving(true);
+    try {
+      const nextETag = await routingTimelineApi.setPaused(!paused, etag.current);
+      if (revision !== apiClient.getConnectionRevision()) return;
+      etag.current = nextETag;
+      setPaused(!paused);
+      clearConfigCache('routing/strategy');
+      await load(true);
+    } catch (error) {
+      if (revision !== apiClient.getConnectionRevision()) return;
+      showNotification(
+        t('timeline.save_failed', { message: error instanceof Error ? error.message : '' }),
+        'error'
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const activeIds = new Set(paused ? [] : (status?.active[current] ?? []));
+  const heldIds = new Set(paused ? [] : (status?.protected ?? []));
   const lastEnd = Math.max(now, ...blocks.map((block) => Date.parse(block.until) || now));
   const span = Math.max(lastEnd - now, HOUR);
   const summary = activeIds.size
@@ -447,8 +472,19 @@ export function TimelinePage() {
         <div>
           <h1 className={styles.title}>{t('timeline.title')}</h1>
           <p className={styles.subtitle}>{t('timeline.subtitle')}</p>
+          <p className={styles.subtitle} role="status">
+            {paused && t('timeline.paused_hint')}
+          </p>
         </div>
         <div className={styles.headerActions}>
+          <Button
+            variant="secondary"
+            size="sm"
+            disabled={saving || loading}
+            onClick={() => void togglePaused()}
+          >
+            {t(paused ? 'timeline.resume' : 'timeline.pause')}
+          </Button>
           {draft.length > 0 && (
             <Button
               variant="ghost"

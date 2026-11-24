@@ -2506,6 +2506,9 @@
     "expired": "The binding session expired. Please start over."
   },
   "timeline": {
+    "pause": "Pause timeline",
+    "resume": "Resume timeline",
+    "paused_hint": "Timeline paused for all providers. Requests use default routing.",
     "title": "Routing timeline",
     "subtitle": "Schedule connected accounts by time and set quota floors to reserve capacity.",
     "accounts_title": "Accounts right now",

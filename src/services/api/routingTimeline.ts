@@ -89,15 +89,22 @@ export function writeTimelineBlocks(blocks: TimelineBlock[]) {
 export const routingTimelineApi = {
   status: () => apiClient.get<TimelineStatus>('/routing/timeline/status'),
 
-  async load(): Promise<{ status: TimelineStatus; blocks: TimelineBlock[]; etag?: string }> {
+  async load(): Promise<{
+    status: TimelineStatus;
+    blocks: TimelineBlock[];
+    paused: boolean;
+    etag?: string;
+  }> {
     const [status, response] = await Promise.all([
       routingTimelineApi.status(),
       apiClient.getRaw('/config'),
     ]);
     const etag = response.headers.etag;
+    const routing = isRecord(response.data) ? response.data.routing : undefined;
     return {
       status,
       blocks: readTimelineBlocks(response.data),
+      paused: isRecord(routing) && routing['timeline-paused'] === true,
       etag: typeof etag === 'string' ? etag : undefined,
     };
   },
@@ -108,5 +115,14 @@ export const routingTimelineApi = {
       { routing: { timeline: writeTimelineBlocks(blocks) } },
       etag ? { headers: { 'If-Match': etag } } : undefined
     );
+  },
+
+  async setPaused(paused: boolean, etag?: string): Promise<string | undefined> {
+    const response = await apiClient.patchRaw(
+      '/config',
+      { routing: { 'timeline-paused': paused } },
+      etag ? { headers: { 'If-Match': etag } } : undefined
+    );
+    return typeof response.headers.etag === 'string' ? response.headers.etag : undefined;
   },
 };

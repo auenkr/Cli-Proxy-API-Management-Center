@@ -2512,6 +2512,9 @@
     "expired": "Phiên liên kết đã hết hạn. Hãy bắt đầu lại."
   },
   "timeline": {
+    "pause": "Tạm dừng lịch định tuyến",
+    "resume": "Tiếp tục lịch định tuyến",
+    "paused_hint": "Lịch đã tạm dừng cho tất cả nhà cung cấp. Các yêu cầu sử dụng định tuyến mặc định.",
     "title": "Routing timeline",
     "subtitle": "Lên lịch sử dụng các tài khoản đã kết nối và đặt mức hạn ngạch tối thiểu để dành dung lượng.",
     "accounts_title": "Accounts right now",

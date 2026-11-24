@@ -75,6 +75,7 @@ const sidebarIcons: Record<string, ReactNode> = {
 interface SidebarNavLinkItem {
   kind?: 'link';
   path: string;
+  end?: boolean;
   labelKey?: string;
   metaKey?: string;
   label?: string;
@@ -641,6 +642,7 @@ export function MainLayout() {
         },
         {
           path: '/routing',
+          end: true,
           labelKey: 'nav.routing',
           metaKey: 'nav_meta.routing',
           icon: sidebarIcons.routing,
@@ -883,6 +885,7 @@ export function MainLayout() {
       <NavLink
         key={item.path}
         to={item.path}
+        end={item.end}
         className={({ isActive }) => `${className} ${isActive ? 'active' : ''}`}
         onClick={() => {
           focusedRailItemRef.current = null;

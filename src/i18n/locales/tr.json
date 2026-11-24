@@ -2506,6 +2506,9 @@
     "title": "Token maliyeti"
   },
   "timeline": {
+    "pause": "Zaman çizelgesini duraklat",
+    "resume": "Zaman çizelgesini sürdür",
+    "paused_hint": "Zaman çizelgesi tüm sağlayıcılar için duraklatıldı. İstekler varsayılan yönlendirmeyi kullanır.",
     "title": "Routing timeline",
     "subtitle": "Bağlı hesapların kullanım saatlerini planlayın ve kapasite ayırmak için kota alt sınırları belirleyin.",
     "accounts_title": "Accounts right now",
